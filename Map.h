@@ -6,37 +6,20 @@
 #include <cstdint>
 #include <vector>
 #include <array>
+#include "Utilities.h"
 
-constexpr std::pair<uint32_t, uint32_t> RESOLUTION{ 800, 600  };
-constexpr std::pair<uint32_t, uint32_t> MAP_SIZE  { 20, 20    };
 
-static sf::Vector2f toWorldCoordinates(const sf::Vector2f& screenCoordinates) {
-  return { (screenCoordinates.x * MAP_SIZE.first) / RESOLUTION.first, (screenCoordinates.y * MAP_SIZE.second) / RESOLUTION.second };
-}
-
-static sf::Vector2f toScreenCoordinates(const sf::Vector2f& worldCoordinates) {
-  return { (worldCoordinates.x * RESOLUTION.first) / MAP_SIZE.first, (worldCoordinates.y * RESOLUTION.second) / MAP_SIZE.second };
-}
-
-static sf::Vector2u toTilePos(const sf::Vector2f& pixelPos) {
-  uint32_t x = static_cast<uint32_t>((pixelPos.x * MAP_SIZE.first) / RESOLUTION.first);
-  uint32_t y = static_cast<uint32_t>((pixelPos.y * MAP_SIZE.second) / RESOLUTION.second);
-  return { x, y };
-}
-
-static sf::Vector2f toPixelPos(const sf::Vector2f& mapPos) {
-  return { 
-  (mapPos.x * RESOLUTION.first) / MAP_SIZE.first, 
-  (mapPos.y * RESOLUTION.second) / MAP_SIZE.second
-  };
-}
-
+/**
+  * @brief  Map class
+  */
 class Map : public sf::Drawable {
 public:
-
+  /**
+   * @brief   Default constructor
+   */
   Map() {
     _walls.reserve(_size.first * _size.second);
-    for (uint32_t i = 0; i < _mini_walls.size(); ++i) {
+    for (uint32_t i = 0; i < _mini_map.size(); ++i) {
       // set tile dimensions
       sf::Vector2f dimensions{ RESOLUTION.first / _size.first, RESOLUTION.second / _size.second };
 
@@ -49,7 +32,7 @@ public:
         static_cast<uint32_t>(i / _size.first) * dimensions.y
       );
       // continue if this is not a wall
-      if (_mini_walls[i] == 0) {
+      if (_mini_map[i] == 0) {
               // set tile color
       tile.setFillColor(sf::Color::Black);
       } else {
@@ -67,12 +50,22 @@ public:
     }
   }
 
+  /**
+   * @brief           Checks if a given screen coordinate is colliding with a wall
+   * @param position  The coordinate to check
+   * @return          A boolean indicating if the given coordinate collides with a wall
+   */
   bool isColiding(const sf::Vector2f& position) const noexcept {
     auto [x, y] = toTilePos(position);
 
-    return _mini_walls[x + y * _size.first] == 1;
+    return _mini_map[x + y * _size.first] == 1;
   }
 
+  /**
+   * @brief           Checks if a given screen coordinate is in the map bounds
+   * @param position  The coordinate to check
+   * @return          A boolean indicating if the given coordinate is in the map bounds
+   */
   bool isInBounds(const sf::Vector2f& position) const noexcept {
     auto [x, y] = toTilePos(position);
     if (x > MAP_SIZE.first || y > MAP_SIZE.first) {
@@ -85,6 +78,11 @@ public:
   }
 
 private:
+  /**
+   * @brief           Draws the user and rays to the screen
+   * @param target    Target where the elements are going to be drawn
+   * @param states    The states used for drawing
+   */
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override {
     for (auto&& tile : _walls) {
       target.draw(tile, states);
@@ -92,8 +90,7 @@ private:
   }
 
   std::vector<sf::RectangleShape> _walls;
-
-  std::vector<uint8_t> _mini_walls{
+  std::vector<uint8_t> _mini_map {
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,

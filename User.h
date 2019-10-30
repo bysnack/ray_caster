@@ -106,12 +106,13 @@ private:
   /**
    * @brief           Draws the user and rays to the screen
    * @param target    Target where the elements are going to be drawn
+   * @param states    The states used for drawing
    */
-  virtual void draw(sf::RenderTarget &target, sf::RenderStates) const override {
+  virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override {
     for (auto &&ray : _rays) {
-      target.draw(ray);
+      target.draw(ray, states);
     }
-    target.draw(_user);
+    target.draw(_user, states);
   }
 
   sf::CircleShape _user{10.f};
