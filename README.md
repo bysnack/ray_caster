@@ -1,7 +1,7 @@
 # Ray Caster
 
 A modern C++ written 2-D ray caster.
-![alt text](https://github.com/bysnack/ray_caster/example.png)
+![alt text](https://github.com/bysnack/ray_caster/blob/master/example.png)
 
 ## Getting Started
 
