@@ -1,7 +1,17 @@
 #include "Map.h"
 #include "Utilities.h"
 
+/**
+ * @brief   Vertical intersection policy class
+ */
 struct Vertical{
+  /**
+   * @brief             Calculates vertical intersection point
+   * @param angle       The angle between the origin and the intersection
+   * @param initialPos  The origin position
+   * @param map         The map where the intersections have to be calculated
+   * @returns           The intersection point
+   */
   sf::Vector2f intersectionPoint(float angle, const sf::Vector2f& initialPos, const Map& map) {
     float tan   = tanf(angle);
     float sin   = sinf(angle);
@@ -49,7 +59,17 @@ struct Vertical{
   }
 };
 
+/**
+ * @brief   Horizontal intersection policy class
+ */
 struct Horizontal{
+  /**
+   * @brief             Calculates horizontal intersection point
+   * @param angle       The angle between the origin and the intersection
+   * @param initialPos  The origin position
+   * @param map         The map where the intersections have to be calculated
+   * @returns           The intersection point
+   */
   sf::Vector2f intersectionPoint(float angle, const sf::Vector2f& initialPos, const Map& map) {
     float tan   = tanf(angle);
     float sin   = sinf(angle);
@@ -97,16 +117,26 @@ struct Horizontal{
   }
 };
 
-
+/**
+ * @brief   Intersection class
+ */
 template<class policy>
 class Intersection : public policy {
   public:
+    /**
+     * @brief             Constructor
+     * @param angle       The angle between the origin and the intersection
+     * @param initialPos  The origin position
+     * @param map         The map where the intersections have to be calculated
+     */
     Intersection(float angle, const sf::Vector2f& initialPos, const Map& map) : 
       _position{ policy::intersectionPoint(angle, initialPos, map) }
     {}
 
+    /**
+     * @brief             Retrieves the intersection point
+     */
     const sf::Vector2f& getPoint() const noexcept { return _position; }
-
   private:
     sf::Vector2f  _position;
 };
