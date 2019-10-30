@@ -53,16 +53,6 @@ public:
     castRays();
   }
 
-  void incrementAngle() {
-    if (angle < 2.f * M_PI) {
-      angle += 0.1f;
-    } else {
-      angle = 0.f;
-    }
-    std::cout << "ANGLE: " << angle << "\n";
-  }
-
-
   void castRays() {
     _rays.clear();
     _intersections.clear();

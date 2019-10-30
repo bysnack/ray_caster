@@ -17,7 +17,6 @@ int main() {
       user.captureMovement();
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) 
       {
-        user.incrementAngle();
         user.castRays();
       }
       if (event.type == sf::Event::Closed) {
