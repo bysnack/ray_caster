@@ -10,13 +10,6 @@
 constexpr std::pair<uint32_t, uint32_t> RESOLUTION{ 800, 600  };
 constexpr std::pair<uint32_t, uint32_t> MAP_SIZE  { 20, 20    };
 
-static float distance(const sf::Vector2f& begin, const sf::Vector2f& end) {
-  auto& [bx, by] = begin;
-  auto& [ex, ey] = end;
-
-  return sqrtf(powf(ex - bx, 2) + powf(ey - by, 2));
-}
-
 static sf::Vector2f toWorldCoordinates(const sf::Vector2f& screenCoordinates) {
   return { (screenCoordinates.x * MAP_SIZE.first) / RESOLUTION.first, (screenCoordinates.y * MAP_SIZE.second) / RESOLUTION.second };
 }

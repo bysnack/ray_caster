@@ -61,11 +61,7 @@ public:
     angle = M_PI / 2.f;
     for (auto i = 0u; i < 100; i++) {
       angle += modifier;
-      Intersection<Vertical>    interV{ angle, _position, _current_map };
-      Intersection<Horizontal>  interH{ angle, _position, _current_map };
-      auto& selected = distance(_position, interH.getPoint()) <= distance(_position, interV.getPoint()) ? interH.getPoint() : interV.getPoint();
-
-      _rays.emplace_back(_position, selected);
+      _rays.emplace_back(_position, angle, _current_map);
     }
   }
 
