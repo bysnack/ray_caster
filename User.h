@@ -115,9 +115,9 @@ private:
     target.draw(_user, states);
   }
 
-  sf::CircleShape _user{10.f};
-  sf::Vector2f _position{400.f, 300.f};
-  float _speed{5.f};
-  std::vector<Ray> _rays{};
-  const Map &_current_map{};
+  sf::CircleShape _user   {10.f         };
+  sf::Vector2f _position  {400.f, 300.f };
+  float _speed            {5.f          };
+  std::vector<Ray> _rays  {             };
+  const Map &_current_map {             };
 };
