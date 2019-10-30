@@ -8,11 +8,8 @@
 #include <array>
 #include "Map.h"
 #include "Ray.h"
+#include "Utilities.h"
 
-bool cmpf(float A, float B, float epsilon = 0.005f)
-{
-    return (fabs(A - B) < epsilon);
-}
 
 class User : public sf::Drawable {
 public:
@@ -56,88 +53,6 @@ public:
     castRays();
   }
 
-  sf::Vector2f calculateVerticalStep() {
-    float tan   = tanf(angle);
-    float sin   = sinf(angle);
-    float cos   = cosf(angle);
-    float x, y  = 0.f;
-
-    if (!cmpf(sin, 0.f)) {
-      x = (cos / std::abs(cos));
-      y = (cos / std::abs(cos)) / tan;
-    } else {
-      x = std::round(cos);
-      y = std::round(sin);
-    }
-
-    return toScreenCoordinates({x, y});
-  }
-
-  sf::Vector2f calculateHorizontalStep() {
-    float tan   = tanf(angle);
-    float sin   = sinf(angle);
-    float cos   = cosf(angle);
-    float x = std::round(cos);
-    float y = std::round(sin);
-
-    if (!cmpf(cos, 0.f)) {
-      x = (sin / std::abs(sin)) * tan;
-      y = (sin / std::abs(sin));
-    }
-
-    return toScreenCoordinates({x, y});
-  }
-
-  sf::Vector2f calculateHorizontalDifferential(const sf::Vector2f& playerPos) {
-    auto [x, y] = toWorldCoordinates(playerPos);
-    float diffX, diffY = 0.f;
-    float tan   = tanf(angle);
-    float sin   = sinf(angle);
-    float cos   = cosf(angle);
-    if (cmpf(sin, 0.f)) {
-      diffY = 0.f;
-      // here its not necessary to calculate a vertical diff, because there are no vertical intersections
-    } else if (sin > 0.f) {
-      diffY = ceilf(y) - y + 0.01f;
-    } else {
-      diffY = floorf(y) - y - 0.01f;
-    }
-
-    if (cmpf(cos, 0.f)) {
-      diffX = 0.f;
-      // here its also not necessary to calculate
-    } else {
-      diffX = diffY * tan;
-    }
-
-    return toScreenCoordinates({diffX, diffY});
-  }
-
-  sf::Vector2f calculateVerticalDifferential(const sf::Vector2f& playerPos) {
-    auto [x, y] = toWorldCoordinates(playerPos);
-    float diffX, diffY = 0.f;
-    float tan   = tanf(angle);
-    float sin   = sinf(angle);
-    float cos   = cosf(angle);
-    if (cmpf(cos, 0.f)) {
-      diffX = 0.f;
-      // here its not necessary to calculate a vertical diff, because there are no vertical intersections
-    } else if (cos > 0.f) {
-      diffX = ceilf(x) - x;
-    } else {
-      diffX = floorf(x) - x - 0.01f;
-    }
-
-    if (cmpf(sin, 0.f)) {
-      diffY = 0.f;
-      // here its also not necessary to calculate
-    } else {
-      diffY = diffX * 1.f / tan;
-    }
-
-    return toScreenCoordinates({diffX, diffY});
-  }
-
   void incrementAngle() {
     if (angle < 2.f * M_PI) {
       angle += 0.1f;
@@ -147,35 +62,19 @@ public:
     std::cout << "ANGLE: " << angle << "\n";
   }
 
-  sf::Vector2f calculateIntersection(const sf::Vector2f& step, const sf::Vector2f& diff) {
-    sf::Vector2f intersection{ _position.x + diff.x, _position.y + diff.y };
-
-    while (_current_map.isInBounds(intersection) && !_current_map.isColiding(intersection)) {
-      intersection += { step.x, step.y};
-    }
-
-    return intersection;
-  }
 
   void castRays() {
     _rays.clear();
     _intersections.clear();
-    std::cout << _position.x << " " << _position.y << "\n";
 
     float modifier = 2 * M_PI / 100;
     angle = M_PI / 2.f;
     for (auto i = 0u; i < 100; i++) {
       angle += modifier;
-      sf::Vector2f verticalIntersection{-10000.f, -10000.f};
-      if (!cmpf(cosf(angle), 0.f)) {
-        verticalIntersection = calculateIntersection(calculateVerticalStep(), calculateVerticalDifferential(_position));
-      }
-      sf::Vector2f horizontalIntersection{-10000.f, -10000.f};
-      if (!cmpf(sinf(angle), 0.f)) {
-        horizontalIntersection = calculateIntersection(calculateHorizontalStep(), calculateHorizontalDifferential(_position));
-      }
+      Intersection<Vertical>    interV{ angle, _position, _current_map };
+      Intersection<Horizontal>  interH{ angle, _position, _current_map };
+      auto& selected = distance(_position, interH.getPoint()) <= distance(_position, interV.getPoint()) ? interH.getPoint() : interV.getPoint();
 
-      auto& selected = distance(_position, horizontalIntersection) <= distance(_position, verticalIntersection) ? horizontalIntersection : verticalIntersection;
       _rays.emplace_back(_position, selected);
     }
   }
