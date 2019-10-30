@@ -15,10 +15,6 @@ int main() {
     sf::Event event;
     while (window.pollEvent(event)) {
       user.captureMovement();
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) 
-      {
-        user.castRays();
-      }
       if (event.type == sf::Event::Closed) {
         window.close();
       }

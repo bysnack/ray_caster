@@ -50,15 +50,17 @@ public:
     }
     _position = pos;
     _user.setPosition(_position);
-    castRays();
+    castRays(1000);
   }
 
-  void castRays() {
+  void castRays(uint32_t amount) {
+    // clear old set of rays
     _rays.clear();
 
-    float modifier = 2 * M_PI / 100;
+    // add the rays
+    float modifier = 2 * M_PI / amount;
     float angle = M_PI / 2.f;
-    for (auto i = 0u; i < 100; i++) {
+    for (auto i = 0u; i < amount; i++) {
       angle += modifier;
       _rays.emplace_back(_position, angle, _current_map);
     }
@@ -66,11 +68,10 @@ public:
 
 private:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates state) const override {
-    target.draw(_user);
-    
     for (auto&& ray : _rays) {
       target.draw(ray);
     }
+    target.draw(_user);
   }
   
   sf::CircleShape   _user         { 10.f          };
