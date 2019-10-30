@@ -55,10 +55,9 @@ public:
 
   void castRays() {
     _rays.clear();
-    _intersections.clear();
 
     float modifier = 2 * M_PI / 100;
-    angle = M_PI / 2.f;
+    float angle = M_PI / 2.f;
     for (auto i = 0u; i < 100; i++) {
       angle += modifier;
       _rays.emplace_back(_position, angle, _current_map);
@@ -72,17 +71,11 @@ private:
     for (auto&& ray : _rays) {
       target.draw(ray);
     }
-    for (auto&& inter : _intersections) {
-      target.draw(inter, state);
-    }
   }
   
-  std::vector<sf::RectangleShape> _intersections;
   sf::CircleShape   _user         { 10.f          };
   sf::Vector2f      _position     { 400.f, 300.f  };
   float             _speed        { 5.f           };
   std::vector<Ray>  _rays         {               };
   const Map         &_current_map                  ;
-  float angle = 0.f;
-
 };

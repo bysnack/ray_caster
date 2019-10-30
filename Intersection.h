@@ -60,7 +60,7 @@ struct Horizontal{
       return { std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest() };
     }
     
-    // calculate the vertical step positions
+    // calculate the horizontal step positions
     float x = std::round(cos);
     float y = std::round(sin);
 
