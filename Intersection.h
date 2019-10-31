@@ -36,9 +36,9 @@ struct Vertical{
     // calculate the position from the start point to the grid
     auto [pX, pY] = toWorldCoordinates(initialPos);
     if (cos > 0.f) {
-      x = ceilf(pX) - pX;
+      x = ceilf(pX) - pX + 0.0005f;
     } else {
-      x = floorf(pX) - pX - 0.01f;
+      x = floorf(pX) - pX - 0.0005f;
     }
 
     if (cmpf(sin, 0.f)) {
@@ -94,9 +94,9 @@ struct Horizontal{
     // calculate the position from the start point to the grid
     auto [pX, pY] = toWorldCoordinates(initialPos);
     if (sin > 0.f) {
-      y = ceilf(pY) - pY + 0.01f;
+      y = ceilf(pY) - pY + 0.0005f;
     } else {
-      y = floorf(pY) - pY - 0.01f;
+      y = floorf(pY) - pY - 0.0005f;
     }
 
     if (cmpf(cos, 0.f)) {
