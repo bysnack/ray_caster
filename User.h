@@ -23,6 +23,7 @@ public:
     _user.setFillColor(sf::Color::Blue);
     _user.setPosition(_position);
     _user.setOrigin(_user.getRadius(), _user.getRadius());
+    if (!_light.loadFromFile("assets/light.png")) std::cout << "ERROR\n";
   }
 
   /**
@@ -82,7 +83,7 @@ public:
     _user.setPosition(_position);
 
     // cast rays on player position change to avoid unused of calculations
-    castRays(1000);
+    castRays(3000);
   }
 
   /**
@@ -92,14 +93,29 @@ public:
   void castRays(uint32_t amount) {
     // clear old set of rays
     _rays.clear();
+    triangles.clear();
 
     // add the rays
     float modifier = 2 * M_PI / amount;
-    float angle = M_PI / 2.f;
+    float angle = 359.f * M_PI / 180;
+    sf::Vector2f dimensions{ RESOLUTION.first - 2.f * (RESOLUTION.first / MAP_SIZE.first), RESOLUTION.second - 2.f * (RESOLUTION.second / MAP_SIZE.second) };
+
+    auto scale = [&](const sf::Vector2f& inter, const sf::Vector2f& pos, const sf::Vector2f& dim)->sf::Vector2f{
+      auto [sx, sy] = _light.getSize();
+      return { (sx / dim.x) * (inter.x - pos.x + dim.x / 2.f), (sy / dim.y) * (inter.y - pos.y + dim.y / 2.f) };
+    };
+
+    triangles.emplace_back(_position, scale(_position, _position, dimensions));
     for (auto i = 0u; i < amount; i++) {
+      Ray r{ _position, angle, _current_map };
+        triangles.emplace_back(r.getInter(), scale(r.getInter(), _position, dimensions));
+        _rays.emplace_back(r);      
+
       angle += modifier;
-      _rays.emplace_back(_position, angle, _current_map);
     }
+
+    triangles.emplace_back(triangles[1].position, scale(triangles[1].position, _position, dimensions));
+
   }
 
 private:
@@ -109,15 +125,20 @@ private:
    * @param states    The states used for drawing
    */
   virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override {
-    for (auto &&ray : _rays) {
-      target.draw(ray, states);
-    }
-    target.draw(_user, states);
+    states.texture = &_light;
+    target.draw(triangles.data(), triangles.size(), sf::TriangleFan, states);
+    //for (auto &&ray : _rays) {
+    //  target.draw(ray, states);
+    //}
+
+    target.draw(_user);
   }
 
+  std::vector<sf::Vertex> triangles;
   sf::CircleShape _user   {10.f         };
-  sf::Vector2f _position  {400.f, 300.f };
-  float _speed            {5.f          };
+  sf::Vector2f _position  {360.f, 260.f };
+  float _speed            {10.f          };
   std::vector<Ray> _rays  {             };
   const Map &_current_map {             };
+  sf::Texture _light{};
 };

@@ -27,8 +27,8 @@ struct Vertical{
     float y = std::round(sin);
 
     if (!cmpf(sin, 0.f)) {
-      x = (cos / std::abs(cos));
-      y = (cos / std::abs(cos)) / tan;
+      x = copysignf(1.f, cos);
+      y = copysignf(1.f, sin) * std::abs(tan);
     }
     auto step     = toScreenCoordinates({x, y});
     
@@ -36,15 +36,15 @@ struct Vertical{
     // calculate the position from the start point to the grid
     auto [pX, pY] = toWorldCoordinates(initialPos);
     if (cos > 0.f) {
-      x = ceilf(pX) - pX + 0.0005f;
+      x = ceilf(pX) - pX + 0.0001f;
     } else {
-      x = floorf(pX) - pX - 0.0005f;
+      x = floorf(pX) - pX - 0.0001f;
     }
 
     if (cmpf(sin, 0.f)) {
       y = 0.f;
     } else {
-      y = x * 1.f / tan;
+      y = x * tan;
     }
     auto diff = toScreenCoordinates({x, y});
 
@@ -85,8 +85,8 @@ struct Horizontal{
     float y = std::round(sin);
 
     if (!cmpf(cos, 0.f)) {
-      x = (sin / std::abs(sin)) * tan;
-      y = (sin / std::abs(sin));
+      x = copysignf(1.f, cos) / std::abs(tan);
+      y = copysignf(1.f, sin);
     }
     auto step     = toScreenCoordinates({x, y});
     
@@ -94,15 +94,15 @@ struct Horizontal{
     // calculate the position from the start point to the grid
     auto [pX, pY] = toWorldCoordinates(initialPos);
     if (sin > 0.f) {
-      y = ceilf(pY) - pY + 0.0005f;
+      y = ceilf(pY) - pY + 0.0001f;
     } else {
-      y = floorf(pY) - pY - 0.0005f;
+      y = floorf(pY) - pY - 0.0001f;
     }
 
     if (cmpf(cos, 0.f)) {
       x = 0.f;
     } else {
-      x = y * tan;
+      x = y / tan;
     }
     auto diff = toScreenCoordinates({x, y});
 

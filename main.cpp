@@ -3,29 +3,47 @@
 #include <cmath>
 #include "Map.h"
 #include "User.h"
-
+#include "Systems/DrawingSystem.h"
+#include <gsl/span>
+#include <variant>
+#include "ComponentContainer.h"
+#include "SystemContainer.h"
+#include "Systems/InitSystem.h"
+//#include "TypeList.h"
+#include "Entities/Entities.h"
+#include "Components/Components.h"
 
 int main() {
-  
-  sf::RenderWindow window(sf::VideoMode(RESOLUTION.first, RESOLUTION.second), "Caster");
+
+  auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(RESOLUTION.first, RESOLUTION.second), "Caster");
   Map map;
   User user{ map };
 
-  while (window.isOpen()) {
+  // list components
+  ComponentContainer components{
+    Entities::Map{},
+    Entities::Line{},
+  };
+
+  InitSystem{ components };
+
+  // list sytstems
+  SystemContainer systems{
+    DrawingSystem{ window }
+  };
+
+  while (window->isOpen()) {
     sf::Event event;
-    while (window.pollEvent(event)) {
-      user.captureMovement();
+    while (window->pollEvent(event)) {
       if (event.type == sf::Event::Closed) {
-        window.close();
+        window->close();
       }
     }
 
-    window.clear(sf::Color::Black);
+    systems.run_all(components);
 
-    window.draw(map);
-    window.draw(user);
+    user.captureMovement();
 
-    window.display();
   }
   return 0;
 }

@@ -5,8 +5,8 @@
 /**
  * @brief             Configuration definitions
  */
-constexpr std::pair<uint32_t, uint32_t> RESOLUTION{ 800, 600  };
-constexpr std::pair<uint32_t, uint32_t> MAP_SIZE  { 20, 20    };
+constexpr std::pair<uint32_t, uint32_t> RESOLUTION{ 1920, 1080  };
+constexpr std::pair<uint32_t, uint32_t> MAP_SIZE  { 60, 60    };
 
 /**
  * @brief          Compares two floating point numbers with a given epsilon
@@ -15,7 +15,7 @@ constexpr std::pair<uint32_t, uint32_t> MAP_SIZE  { 20, 20    };
  * @param epsilon  The epsilon to take in account for the comparison
  * @returns        A boolean indicator of the comparision results
  */
-static inline bool cmpf(float lhs, float rhs, float epsilon = 0.005f)
+static inline bool cmpf(float lhs, float rhs, float epsilon = 0.00005f)
 {
     return (fabs(lhs - rhs) < epsilon);
 }
