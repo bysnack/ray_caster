@@ -12,14 +12,12 @@ namespace Components {
 
   template<uint32_t Id, class ...Entities>
   struct Base {
-    using Held = std::variant<Entities...>;
-
-    std::vector<Held>  entities;
-    static constexpr const uint32_t     id      { Id };
+    std::vector<std::variant<std::shared_ptr<Entities>...>>  entities;
+    static constexpr const uint32_t         id      { Id };
   };
 
-  struct Drawable       : public Base<0, std::shared_ptr<Entities::Line>, std::shared_ptr<Entities::Map>> {};
-  struct Initializable  : public Base<1, std::shared_ptr<Entities::Map>>                                  {};
+  struct Drawable       : public Base<0, Entities::Line, Entities::Map> {};
+  struct Initializable  : public Base<1, Entities::Map>                 {};
 
   using Component     = std::variant<Drawable, Initializable>;
   using ComponentPtr  = std::shared_ptr<Component>;
