@@ -2,6 +2,14 @@
 
 #include <type_traits>
 
+#include "Line.h"
+#include "Map.h"
+
+namespace Components {
+  struct Drawable;
+  struct Initializable;
+}
+
 namespace Entities {
   /**
    *  @brief  Is entity initializable type trait
@@ -14,7 +22,9 @@ namespace Entities {
     // only certan specific types are initializables
     std::is_same_v<Target, Map>
 
-  >> : std::true_type{};
+  >> : std::true_type{
+    using Component = Components::Initializable;
+  };
 
   template<class Target>
   static constexpr const bool is_initializable_v = is_initializable<Target>::value;
@@ -30,7 +40,9 @@ namespace Entities {
     // property render data exists
     std::is_same_v<decltype(Target::render), Properties::RenderData>
 
-  >> : std::true_type{};
+  >> : std::true_type{
+    using Component = Components::Drawable;
+  };
 
   template<class Target>
   static constexpr const bool is_renderizable_v = is_renderizable<Target>::value;

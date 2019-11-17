@@ -2,6 +2,7 @@
 
 #include <gsl/span>
 #include <variant>
+#include <iostream>
 #include "../Components/Components.h"
 
 class DrawingSystem {

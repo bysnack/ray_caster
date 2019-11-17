@@ -5,6 +5,8 @@
 #include <vector>
 
 #include "Entities/Entities.h"
+#include "ComponentTraits.h"
+
 
 namespace Components {
 
