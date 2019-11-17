@@ -24,12 +24,12 @@ namespace {
      *  @param  container The cointaner where to push
      */
     template<class Entity, class Container>
-    RecursivePusher<Util::TypeList<Head, Util::NullType>>(Entity entity, Container& container) {
+    RecursivePusher<Util::TypeList<Head, Util::NullType>>(std::shared_ptr<Entity> entity, Container& container) {
       // if the type trait is valid
       if constexpr(Head::value) {
         // get the component and push a shared pointer to the entities list
         std::get<typename Head::Component>(container[Head::Component::id]).entities.push_back(
-          std::make_shared<typename Head::Component::Held>(entity)
+          entity
         );        
       } 
     }
@@ -46,14 +46,14 @@ namespace {
      *  @param  container The cointaner where to push
      */
     template<class Entity, class Container>
-    RecursivePusher<Util::TypeList<Head, Tail>>(Entity entity, Container& container) : 
+    RecursivePusher<Util::TypeList<Head, Tail>>(std::shared_ptr<Entity> entity, Container& container) : 
       RecursivePusher<Tail>{entity, container}
     {
       // if the type trait is valid
       if constexpr(Head::value) {
         // get the component and push a shared pointer to the entities list
         std::get<typename Head::Component>(container[Head::Component::id]).entities.push_back(
-          std::make_shared<typename Head::Component::Held>(entity)
+          entity
         );
       } 
     }
@@ -100,7 +100,7 @@ class ComponentContainer {
     template<class Entity, class ...Rest>
     void push(Entity entity, Rest ...entities) {
       // delegate pushing to the recursive pusher 
-      RecursivePusherWithTraits<Entity>{ entity, _components };
+      RecursivePusherWithTraits<Entity>{ std::make_shared<Entity>(std::move(entity)), _components };
 
       // make the recursive call if there are more entities to push
       if constexpr (sizeof... (entities) > 0) push(std::forward<Rest>(entities)...);
@@ -118,8 +118,8 @@ class ComponentContainer {
         // visit the component
         std::visit([&function](auto&& elem){
           // invoke fuction with element
-          function(elem);
-        }, *entity);
+          function(*elem);
+        }, entity);
       }
     }
 

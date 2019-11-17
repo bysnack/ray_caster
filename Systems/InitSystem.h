@@ -44,7 +44,10 @@ class InitSystem {
     InitSystem(Component&& components)
     {
       components.template apply<Components::Initializable>([](auto&& elem){
-        initializeMap(elem.seed, elem.size);
+        auto tiles = initializeMap(elem.seed, elem.size);
+        for (auto&& tile : tiles) {
+          elem.render.push_back({sf::Quads, tile});
+        }
       });
     }
 };
