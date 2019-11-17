@@ -12,8 +12,8 @@ namespace Components {
 
   template<uint32_t Id, class ...Entities>
   struct Base {
-    std::vector<std::variant<std::shared_ptr<Entities>...>>  entities;
-    static constexpr const uint32_t         id      { Id };
+    std::vector<std::variant<std::shared_ptr<Entities>...>>   entities;
+    static constexpr const uint32_t                           id      { Id };
   };
 
   struct Drawable       : public Base<0, Entities::Line, Entities::Map> {};
