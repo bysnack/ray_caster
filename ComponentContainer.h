@@ -28,7 +28,7 @@ namespace {
       // if the type trait is valid
       if constexpr(Head::value) {
         // get the component and push a shared pointer to the entities list
-        std::get<typename Head::Component>(container[Head::Component::id]).entities.push_back(
+        std::get<typename Head::Component>(container).entities.push_back(
           entity
         );        
       } 
@@ -52,7 +52,7 @@ namespace {
       // if the type trait is valid
       if constexpr(Head::value) {
         // get the component and push a shared pointer to the entities list
-        std::get<typename Head::Component>(container[Head::Component::id]).entities.push_back(
+        std::get<typename Head::Component>(container).entities.push_back(
           entity
         );
       } 
@@ -114,7 +114,7 @@ class ComponentContainer {
     template<class Component, class Function>
     void apply(Function&& function) {
       // get component and iterate through entities
-      for (auto&& entity : std::get<Component>(_components[Component::id]).entities) {
+      for (auto&& entity : std::get<Component>(_components).entities) {
         // visit the component
         std::visit([&function](auto&& elem){
           // invoke fuction with element
@@ -124,5 +124,5 @@ class ComponentContainer {
     }
 
   private:
-    std::array<Components::Component, 2> _components{ Components::Drawable{}, Components::Initializable{} };
+    Components::Components _components;
 };
