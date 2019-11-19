@@ -5,20 +5,18 @@
 #include <vector>
 
 #include "Entities/Entities.h"
-#include "ComponentTraits.h"
 
 
 namespace Components {
 
-  template<uint32_t Id, class ...Entities>
-  struct Base {
+  template<class ...Entities>
+  struct Component {
     std::vector<std::variant<std::shared_ptr<Entities>...>>   entities;
   };
 
-  struct Drawable       : public Base<0, Entities::Line, Entities::Map> {};
-  struct Initializable  : public Base<1, Entities::Map>                 {};
+  using Drawable = Component<Entities::Line, Entities::Map, Entities::User>;
+  using Map      = Component<Entities::Map>;
+  using User     = Component<Entities::User>;
 
-  using Component     = std::variant<Drawable, Initializable>;
-  using ComponentPtr  = std::shared_ptr<Component>;
-  using Components    = std::tuple<Drawable, Initializable>;
+  using Components    = std::tuple<Drawable, Map, User>;
 }

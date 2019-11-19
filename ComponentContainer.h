@@ -2,6 +2,7 @@
 
 #include "Entities/Entities.h"
 #include "Components/Components.h"
+#include "Components/Traits.h"
 #include "Utils/TypeList.h"
 
 namespace {
@@ -65,9 +66,9 @@ namespace {
   template<class Entity>
   using RecursivePusherWithTraits = RecursivePusher<
     Util::TypeList<
-      Entities::is_renderizable<Entity>, 
+      Components::belongsToComponent<Entity, Components::Drawable>, 
       Util::TypeList<
-        Entities::is_initializable<Entity>, 
+        Components::belongsToComponent<Entity, Components::Map>, 
         Util::NullType
       >
     >
