@@ -1,9 +1,7 @@
 #pragma once
 
 #include <type_traits>
-
-#include "../Entities/Entities.h"
-#include "Components.h"
+#include <tuple>
 
 namespace Components {
 
@@ -11,7 +9,5 @@ namespace Components {
   struct belongsToComponent;
 
   template<class Target, class ...Alts>
-  struct belongsToComponent<Target, Component<Alts...>> : public std::disjunction<std::is_same<Target, Alts>...> {
-    using Component = Component<Alts...>;
-  };
+  struct belongsToComponent<Target, Component<Alts...>> : public std::disjunction<std::is_same<Target, Alts>...> {};
 }

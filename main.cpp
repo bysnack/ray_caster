@@ -3,12 +3,11 @@
 #include <cmath>
 #include "Map.h"
 #include "User.h"
-#include "Systems/DrawingSystem.h"
+#include "Systems/Renderer.h"
 #include <gsl/span>
 #include <variant>
-#include "ComponentContainer.h"
 #include "SystemContainer.h"
-#include "Systems/InitSystem.h"
+#include "Systems/InitMap.h"
 //#include "TypeList.h"
 #include "Entities/Entities.h"
 #include "Components/Components.h"
@@ -20,16 +19,16 @@ int main() {
   User user{ map };
 
   // list components
-  ComponentContainer components{
+  Components::Container components{
     Entities::Map{},
     Entities::Line{},
   };
 
-  InitSystem{ components };
+  Systems::InitMap{ components };
 
   // list sytstems
   SystemContainer systems{
-    DrawingSystem{ window }
+    Systems::Renderer{ window }
   };
 
   while (window->isOpen()) {

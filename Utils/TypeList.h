@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-namespace Util {
+namespace Utils {
 
   template<class T, class U>
   struct TypeList {

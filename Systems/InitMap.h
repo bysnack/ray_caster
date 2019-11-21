@@ -38,16 +38,19 @@ namespace {
   }
 }
 
-class InitSystem {
-  public:
-    template<class Component>
-    InitSystem(Component&& components)
-    {
-      components.template apply<Components::Map>([](auto&& elem){
-        auto tiles = initializeMap(elem.seed, elem.size);
-        for (auto&& tile : tiles) {
-          elem.render.push_back({sf::Quads, tile});
-        }
-      });
-    }
-};
+namespace Systems {
+
+  class InitMap {
+    public:
+      template<class Component>
+      InitMap(Component&& components)
+      {
+        components.template apply<Components::Map>([](auto&& elem){
+          auto tiles = initializeMap(elem.seed, elem.size);
+          for (auto&& tile : tiles) {
+            elem.render.push_back({sf::Quads, tile});
+          }
+        });
+      }
+  };
+}
