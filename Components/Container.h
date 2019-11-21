@@ -27,7 +27,7 @@ namespace Components {
        */
       template<class Entity, class ...Entities>
       constexpr void emplace(Entity&& entity, Entities&& ...entities) {
-        addImpl(std::make_shared<Entity>(std::forward<Entity>(entity)));
+        emplaceImpl(std::make_shared<Entity>(std::forward<Entity>(entity)));
         if constexpr (sizeof... (Entities) > 0) {
           emplace(std::forward<Entities>(entities)...);
         }
@@ -51,18 +51,18 @@ namespace Components {
       }
     private:
       /**
-       *  @brief            Recursive component addition function
+       *  @brief            Recursive component emplacement implementation function
        *  @param  entity    A shared pointer to the entity used to create the component
        */
       template<class Entity, size_t Index = 0>
-      constexpr void addImpl(std::shared_ptr<Entity> entity) {
+      constexpr void emplaceImpl(std::shared_ptr<Entity> entity) {
         using Comp = std::tuple_element_t<Index, underlying_type>;
         if constexpr (belongsToComponent<Entity, Comp>::value) {
           std::get<Index>(_components).entities.push_back(entity);
         }
 
         if constexpr (Index < std::tuple_size_v<underlying_type> - 1) {
-          addImpl<Entity, Index + 1>(std::move(entity));
+          emplaceImpl<Entity, Index + 1>(std::move(entity));
         }
       }
 
