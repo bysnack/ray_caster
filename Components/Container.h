@@ -17,22 +17,27 @@ namespace Components {
       Container(Entities&& ...entities) noexcept
       {
         // derive work to push function
-        add(std::forward<Entities>(entities)...);
+        emplace(std::forward<Entities>(entities)...);
       }
 
+      /**
+       *  @brief            Emplaces a component into the container
+       *  @param  entity    The entity to emplace
+       *  @param  entities  The rest of entities to emplace next
+       */
       template<class Entity, class ...Entities>
-      constexpr void add(Entity&& entity, Entities&& ...entities) {
+      constexpr void emplace(Entity&& entity, Entities&& ...entities) {
         addImpl(std::make_shared<Entity>(std::forward<Entity>(entity)));
         if constexpr (sizeof... (Entities) > 0) {
-          add(std::forward<Entities>(entities)...);
+          emplace(std::forward<Entities>(entities)...);
         }
       }
 
       /**
-      *  @brief            Applies a given function to an specified component
-      *  @param  function  The function to apply
-      *  @tparam Component The target component
-      */
+       *  @brief            Applies a given function to an specified component
+       *  @param  function  The function to apply
+       *  @tparam Component The target component
+       */
       template<class Component, class Function>
       void apply(Function&& function) {
         // get component and iterate through entities
@@ -45,7 +50,10 @@ namespace Components {
         }
       }
     private:
-
+      /**
+       *  @brief            Recursive component addition function
+       *  @param  entity    A shared pointer to the entity used to create the component
+       */
       template<class Entity, size_t Index = 0>
       constexpr void addImpl(std::shared_ptr<Entity> entity) {
         using Comp = std::tuple_element_t<Index, underlying_type>;
@@ -58,6 +66,7 @@ namespace Components {
         }
       }
 
+    private:
       underlying_type _components;
   };
 }
