@@ -1,10 +1,14 @@
 #pragma once
 
 #include "Properties/RenderData.h"
+#include "../Utils/Vector.h"
 
 namespace Entities {
 
   struct Line {
-    Properties::RenderData render{ {sf::Lines, {{{0.f, 0.f}, sf::Color::Blue }, {{800.f, 600.f}, sf::Color::Blue}}} };
+    Line(const Utils::Vector<float>& begin, const Utils::Vector<float>& end) noexcept :
+      render{ {sf::Lines, {{begin, sf::Color::Blue }, {end, sf::Color::Blue}}} }
+    {}
+    Properties::RenderData render;
   };
 }

@@ -4,10 +4,17 @@
 #include <type_traits>
 #include <utility>
 #include <string>
+#include <iostream>
 #include <sstream>
+#include "Utilities.h"
 
 
 namespace Utils {
+
+  enum class Coordinates : uint8_t {
+    World,
+    Screen,
+  };
   
   template<class T, class = std::enable_if_t<std::is_arithmetic_v<T>>>
   struct Vector {
@@ -104,6 +111,22 @@ namespace Utils {
 
     float magnitude() const noexcept {
       return sqrtf(powf(x, 2) + powf(y, 2));
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Vector<T>& vector) {
+      os << std::string{ vector };
+      return os;
+    }
+
+    Vector<T> coordinates(Coordinates type, std::enable_if_t<std::is_floating_point_v<T>>* = 0) {
+      switch(type) {
+        case Coordinates::World:
+          return { (x * RESOLUTION.first) / MAP_SIZE.first, (y * RESOLUTION.second) / MAP_SIZE.second };
+        case Coordinates::Screen:
+          return { (x * MAP_SIZE.first) / RESOLUTION.first, (y * MAP_SIZE.second) / RESOLUTION.second };
+        default:
+          return { -1.f, -1.f };
+      }
     }
   };
 }

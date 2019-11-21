@@ -14,8 +14,8 @@ namespace {
     for (auto i = 0u; i < seed.size(); ++i) {
       // calculate tile dimensions
       sf::Vector2f dimensions{
-        static_cast<float>(RESOLUTION.first / width),
-        static_cast<float>(RESOLUTION.second / height)
+        static_cast<float>(Utils::RESOLUTION.first / width),
+        static_cast<float>(Utils::RESOLUTION.second / height)
       };
 
       sf::Vector2f positions{
