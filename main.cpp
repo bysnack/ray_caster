@@ -1,36 +1,29 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "Systems/Renderer.h"
 #include <gsl/span>
 #include <variant>
-#include "Utils/Utilities.h"
-#include "SystemContainer.h"
-#include "Systems/InitMap.h"
-#include "Systems/Movement.h"
-#include "Systems/InitUser.h"
-#include "Entities/Entities.h"
-#include "Components/Components.h"
+#include "utils/utilities.h"
+#include "systems/systems.h"
+#include "entities/entities.h"
+#include "components/components.h"
 
 int main() {
 
-  auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(Utils::RESOLUTION.first, Utils::RESOLUTION.second), "Caster");
+  auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(utils::RESOLUTION.first, utils::RESOLUTION.second), "Caster");
+  window->setFramerateLimit(60);
 
   // list components
-  Components::Container components{
-    Entities::Map{},
-    Entities::Line{{0.f, 0.f}, {800.f, 600.f}},
-    Entities::Line{{400.f, 200.f}, {0.f, 800.f}},
-    Entities::User{},
-  };
+  components::container components;
 
-  Systems::InitMap  { components };
-  Systems::InitUser { components };
+  components.insert_or_replace(components::player{}, 0);
+
+  systems::map{ components };
 
   // list sytstems
-  SystemContainer systems{
-    Systems::Renderer{ window },
-    Systems::Movement{}
+  systems::container systems{
+    systems::render{ window },
+    systems::movement{}
   };
 
   while (window->isOpen()) {

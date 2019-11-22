@@ -3,11 +3,11 @@
 #include <utility>
 
 
-namespace Utils {
+namespace utils {
   /**
   * @brief             Configuration definitions
   */
-  constexpr std::pair<uint32_t, uint32_t> RESOLUTION{ 1920, 1080  };
+  constexpr std::pair<uint32_t, uint32_t> RESOLUTION{ 800, 600  };
   constexpr std::pair<uint32_t, uint32_t> MAP_SIZE  { 60, 60    };
 
   /**

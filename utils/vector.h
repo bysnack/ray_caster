@@ -6,72 +6,72 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include "Utilities.h"
+#include "utilities.h"
 
 
-namespace Utils {
+namespace utils {
 
-  enum class Coordinates : uint8_t {
-    World,
-    Screen,
+  enum class coordinates : uint8_t {
+    world,
+    screen,
   };
   
   template<class T, class = std::enable_if_t<std::is_arithmetic_v<T>>>
-  struct Vector {
+  struct vector {
     using value_type = T;
     T x, y;
 
-    Vector(T x, T y) noexcept : 
+    vector(T x, T y) noexcept : 
       x{ x },
       y{ y }
     {}
 
-    Vector(const sf::Vector2<T>& vector) noexcept :
-      x{ vector.x },
-      y{ vector.y }
+    vector(const sf::Vector2<T>& other) noexcept :
+      x{ other.x },
+      y{ other.y }
     {}
 
-    Vector<T>& operator+=(const Vector<T>& vector) noexcept {
-      x += vector.x;
-      y += vector.y;
+    vector<T>& operator+=(const vector<T>& other) noexcept {
+      x += other.x;
+      y += other.y;
 
       return *this;
     }
 
-    Vector<T>& operator-=(const Vector<T>& vector) noexcept {
-      x -= vector.x;
-      y -= vector.y;
+    vector<T>& operator-=(const vector<T>& other) noexcept {
+      x -= other.x;
+      y -= other.y;
 
       return *this;
     }
 
-    Vector<T>& operator*=(T multiplier) noexcept {
+    vector<T>& operator*=(T multiplier) noexcept {
       x *= multiplier;
       y *= multiplier;
 
       return *this;
     }
 
-    Vector<T>& operator/=(T divisor) noexcept {
+    vector<T>& operator/=(T divisor) noexcept {
       x /= divisor;
       y /= divisor;
 
       return *this;
     }
 
-    Vector<T> operator+(const Vector<T>& vector) const noexcept {
-      return { x + vector.x, y + vector.y };
+    vector<T> operator+(const vector<T>& other) const noexcept {
+      return { x + other.x, y + other.y };
     }
 
-    Vector<T> operator-(const Vector<T>& vector) const noexcept {
-      return { x - vector.x, y - vector.y };
+    vector<T> operator-(const vector<T>& other) const noexcept {
+      return { x - other.x, y - other.y };
     }
 
-    Vector<T> operator*(T multiplier) const noexcept {
+    vector<T> operator*(T multiplier) const noexcept {
       return { x * multiplier, y * multiplier };
     }
 
-    Vector<T> operator/(T dividend) const noexcept {
+    vector<T> operator/(T dividend) const noexcept {
       return { x * dividend, y * dividend };
     }
 
@@ -86,22 +86,22 @@ namespace Utils {
       return ss.str();
     }
     
-    Vector<float> operator%(float theta) const noexcept {
+    vector<float> operator%(float theta) const noexcept {
       float cs = cosf(theta);
       float sn = sinf(theta);
 
       return{ x * cs - y * sn, x * sn + y * cs };
     }
 
-    bool operator==(const Vector<T>& other) const noexcept {
+    bool operator==(const vector<T>& other) const noexcept {
       return x == other.x && y == other.y;
     }
 
-    bool operator!=(const Vector<T>& other) const noexcept {
+    bool operator!=(const vector<T>& other) const noexcept {
       return !(*this == other);
     }
 
-    Vector<T> dot(const Vector<T>& other) const noexcept {
+    vector<T> dot(const vector<T>& other) const noexcept {
       return { x * other.x + y * other.y };
     }
 
@@ -113,16 +113,16 @@ namespace Utils {
       return sqrtf(powf(x, 2) + powf(y, 2));
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Vector<T>& vector) {
+    friend std::ostream& operator<<(std::ostream& os, const vector<T>& vector) {
       os << std::string{ vector };
       return os;
     }
 
-    Vector<T> coordinates(Coordinates type, std::enable_if_t<std::is_floating_point_v<T>>* = 0) {
+    vector<T> coordinates(coordinates type, std::enable_if_t<std::is_floating_point_v<T>>* = 0) {
       switch(type) {
-        case Coordinates::World:
+        case coordinates::world:
           return { (x * RESOLUTION.first) / MAP_SIZE.first, (y * RESOLUTION.second) / MAP_SIZE.second };
-        case Coordinates::Screen:
+        case coordinates::screen:
           return { (x * MAP_SIZE.first) / RESOLUTION.first, (y * MAP_SIZE.second) / RESOLUTION.second };
         default:
           return { -1.f, -1.f };
