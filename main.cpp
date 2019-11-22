@@ -18,7 +18,7 @@ int main() {
 
   components.insert_or_replace(components::player{}, 0);
 
-  systems::map{ components };
+  systems::initialize_map(components);
 
   // list sytstems
   systems::container systems{

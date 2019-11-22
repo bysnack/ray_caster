@@ -13,7 +13,7 @@ namespace systems {
         _window{ std::move(window) }
       {}
       
-      void run(components::container& container) {
+      void operator()(components::container& container) {
         _window->clear(sf::Color::Black);
         // render user in the right position
 

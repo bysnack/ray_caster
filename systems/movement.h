@@ -10,7 +10,7 @@ namespace systems {
 
   class movement {
     public:
-      void run(components::container& components) {
+      void operator()(components::container& components) {
         // handle movement
         components.apply_if<components::is_movable>([&](auto&& elem){
           elem.position += captureMovement(elem.speed);

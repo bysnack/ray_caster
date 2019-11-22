@@ -20,7 +20,7 @@ namespace systems {
           // visit the variant
           std::visit([&components](auto&& system){
             // run the system with the components
-            system.run(std::forward<components_t>(components));
+            system(std::forward<components_t>(components));
           }, elem);
         }
       }
