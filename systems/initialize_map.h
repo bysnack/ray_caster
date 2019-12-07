@@ -107,12 +107,12 @@ namespace systems {
 
     for (auto i = 0u; i < seed.size(); ++i) {
       // calculate tile dimensions
-      utils::vector<float> dimensions{
-        static_cast<float>(utils::RESOLUTION.first / width),
-        static_cast<float>(utils::RESOLUTION.second / height)
+      entities::dimensions dimensions{
+        static_cast<float>(config::RESOLUTION.first / width),
+        static_cast<float>(config::RESOLUTION.second / height)
       };
 
-      utils::vector<float> positions{
+      entities::position positions{
         (i % width) * dimensions.x,
         static_cast<uint32_t>(i / width) * dimensions.y
       };
@@ -126,9 +126,9 @@ namespace systems {
         {{0.f                + positions.x, 0.f + dimensions.y + positions.y}, color},
       };
 
-      entities::render render{ sf::Quads, std::move(t) };
+      entities::render render { sf::Quads, std::move(t) };
 
-      components::cell cell{ render };
+      components::cell cell{ render, positions.coordinates(utils::coordinates::world), dimensions };
 
       cells.emplace(
         std::piecewise_construct,

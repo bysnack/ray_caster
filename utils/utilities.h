@@ -1,15 +1,9 @@
 #pragma once
 
 #include <utility>
-
+#include "../config.h"
 
 namespace utils {
-  /**
-  * @brief             Configuration definitions
-  */
-  constexpr std::pair<uint32_t, uint32_t> RESOLUTION{ 800, 600  };
-  constexpr std::pair<uint32_t, uint32_t> MAP_SIZE  { 60, 60    };
-
   /**
   * @brief          Compares two floating point numbers with a given epsilon
   * @param lhs      The left hand side element to comparate
@@ -42,7 +36,7 @@ namespace utils {
   * @returns                   The transformed world coordinates
   */
   sf::Vector2f toWorldCoordinates(const sf::Vector2f& screenCoordinates) {
-    return { (screenCoordinates.x * MAP_SIZE.first) / RESOLUTION.first, (screenCoordinates.y * MAP_SIZE.second) / RESOLUTION.second };
+    return { (screenCoordinates.x * config::MAP_SIZE.first) / config::RESOLUTION.first, (screenCoordinates.y * config::MAP_SIZE.second) / config::RESOLUTION.second };
   }
 
   /**
@@ -51,7 +45,7 @@ namespace utils {
   * @returns                   The transformed screen coordinates
   */
   sf::Vector2f toScreenCoordinates(const sf::Vector2f& worldCoordinates) {
-    return { (worldCoordinates.x * RESOLUTION.first) / MAP_SIZE.first, (worldCoordinates.y * RESOLUTION.second) / MAP_SIZE.second };
+    return { (worldCoordinates.x * config::RESOLUTION.first) / config::MAP_SIZE.first, (worldCoordinates.y * config::RESOLUTION.second) / config::MAP_SIZE.second };
   }
 
   /**
@@ -60,8 +54,8 @@ namespace utils {
   * @returns                   The transformed tile position
   */
   sf::Vector2u toTilePos(const sf::Vector2f& pixelPos) {
-    uint32_t x = static_cast<uint32_t>((pixelPos.x * MAP_SIZE.first) / RESOLUTION.first);
-    uint32_t y = static_cast<uint32_t>((pixelPos.y * MAP_SIZE.second) / RESOLUTION.second);
+    uint32_t x = static_cast<uint32_t>((pixelPos.x * config::MAP_SIZE.first) / config::RESOLUTION.first);
+    uint32_t y = static_cast<uint32_t>((pixelPos.y * config::MAP_SIZE.second) / config::RESOLUTION.second);
     return { x, y };
   }
 }

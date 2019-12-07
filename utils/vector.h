@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include "utilities.h"
+#include "../config.h"
 
 
 namespace utils {
@@ -121,9 +122,9 @@ namespace utils {
     vector<T> coordinates(coordinates type, std::enable_if_t<std::is_floating_point_v<T>>* = 0) {
       switch(type) {
         case coordinates::world:
-          return { (x * RESOLUTION.first) / MAP_SIZE.first, (y * RESOLUTION.second) / MAP_SIZE.second };
+          return { (x * config::RESOLUTION.first) / config::MAP_SIZE.first, (y * config::RESOLUTION.second) / config::MAP_SIZE.second };
         case coordinates::screen:
-          return { (x * MAP_SIZE.first) / RESOLUTION.first, (y * MAP_SIZE.second) / RESOLUTION.second };
+          return { (x * config::MAP_SIZE.first) / config::RESOLUTION.first, (y * config::MAP_SIZE.second) / config::RESOLUTION.second };
         default:
           return { -1.f, -1.f };
       }

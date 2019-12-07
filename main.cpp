@@ -10,7 +10,7 @@
 
 int main() {
 
-  auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(utils::RESOLUTION.first, utils::RESOLUTION.second), "Caster");
+  auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(config::RESOLUTION.first, config::RESOLUTION.second), "Caster");
   window->setFramerateLimit(60);
 
   // list components

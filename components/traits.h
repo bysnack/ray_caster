@@ -32,6 +32,15 @@ namespace components {
     std::is_same<decltype(std::remove_cv_t<std::remove_reference_t<component_t>>::position), entities::position>
   >> : public std::true_type{};
 
+  template<class component_t, class = void>
+  struct is_collisionable : public std::false_type{};
+
+  template<class component_t>
+  struct is_collisionable<component_t, std::enable_if_t<
+    // position entity present
+    std::is_same_v<decltype(std::remove_cv_t<std::remove_reference_t<component_t>>::position), entities::position>
+  >> : public std::true_type{};
+
   template<class component_t>
   struct true_trait : std::true_type{};
 

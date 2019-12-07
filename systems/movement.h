@@ -10,15 +10,17 @@ namespace systems {
 
   class movement {
     public:
-      void operator()(components::container& components) {
+      void operator()(components::container& container) {
         // handle movement
-        components.apply_if<components::is_movable>([&](auto&& elem){
-          elem.position += captureMovement(elem.speed);
+        container.apply_if<components::is_movable>([&](auto&& elem){
+          if constexpr (components::is_component_v<decltype(elem), components::player>) {
+            elem.position += captureUserMovement(elem.speed);
+          }
         });
       }
 
     private:
-      utils::vector<float> captureMovement(float speed) {
+      utils::vector<float> captureUserMovement(float speed) {
         // unity advance vectors
         const utils::vector<float> x_unity{1.f * speed, 0.f};
         const utils::vector<float> y_unity{0.f, 1.f * speed};

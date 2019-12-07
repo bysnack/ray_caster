@@ -5,6 +5,8 @@
 namespace components {
 
   struct cell {
-    entities::render render;
+    entities::render      render;
+    entities::position    position;
+    entities::dimensions  dimensions;
   };
 }
