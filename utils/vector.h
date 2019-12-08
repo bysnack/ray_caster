@@ -73,7 +73,7 @@ namespace utils {
     }
 
     vector<T> operator/(T dividend) const noexcept {
-      return { x * dividend, y * dividend };
+      return { x / dividend, y / dividend };
     }
 
     operator sf::Vector2f() const noexcept { 

@@ -32,7 +32,6 @@ namespace systems {
 
         // on key pressed
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            std::cout << x_unity << '\n';
           position += x_unity;
           heading = entities::heading::east;
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
@@ -41,7 +40,7 @@ namespace systems {
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
           position += y_unity;
           heading = entities::heading::south;
-        } if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
           position -= y_unity;
           heading = entities::heading::north;
         }

@@ -24,6 +24,20 @@ namespace {
         }
         return modifier;
     }
+    
+    template<class component_t>
+    bool detectCollision(const components::container::components<components::cell>& cells, const component_t& component) {
+        entities::position user_position{ component.position - (component.dimensions / 2) };
+        for (auto&& cell : cells) {
+            if (user_position.x < cell.second.position.x + cell.second.dimensions.x
+                && user_position.x + component.dimensions.x > cell.second.position.x
+                && user_position.y < cell.second.position.y + cell.second.dimensions.y
+                && user_position.y + component.dimensions.y > cell.second.position.y) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 namespace systems {
@@ -32,23 +46,10 @@ namespace systems {
         void operator()(components::container& container) {
             // only movables can collisionate
             container.apply_if<components::is_movable>([&](auto&& elem) {
-                if (detectCollision(container.get<components::cell>(), elem.position)) {
+                if (detectCollision(container.get<components::cell>(), elem)) {
                     elem.position += heading_to_pos_modifier(elem.heading) * elem.speed;
                 }
             });
-        }
-
-    private:
-        bool detectCollision(const components::container::components<components::cell>& cells, const entities::position& position) {
-            for (auto&& cell : cells) {
-                if (position.x < cell.second.position.x + cell.second.dimensions.x
-                    && position.x + cell.second.dimensions.x > cell.second.position.x
-                    && position.y < cell.second.position.y + cell.second.dimensions.y
-                    && position.y + cell.second.dimensions.y > cell.second.position.y) {
-                    return true;
-                }
-            }
-            return false;
         }
     };
 }
