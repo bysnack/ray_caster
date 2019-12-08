@@ -26,7 +26,7 @@ namespace {
     }
     
     template<class component_t>
-    bool detectCollision(const components::container::components<components::cell>& cells, const component_t& component) {
+    bool detect_collision(const components::container::components<components::cell>& cells, const component_t& component) {
         entities::position user_position{ component.position - (component.dimensions / 2) };
         for (auto&& cell : cells) {
             if (user_position.x < cell.second.position.x + cell.second.dimensions.x
@@ -46,7 +46,7 @@ namespace systems {
         void operator()(components::container& container) {
             // only movables can collisionate
             container.apply_if<components::is_movable>([&](auto&& elem) {
-                if (detectCollision(container.get<components::cell>(), elem)) {
+                if (detect_collision(container.get<components::cell>(), elem)) {
                     elem.position += heading_to_pos_modifier(elem.heading) * elem.speed;
                 }
             });
