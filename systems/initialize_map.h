@@ -106,6 +106,7 @@ namespace systems {
     auto& cells = container.get<components::cell>();
 
     for (auto i = 0u; i < seed.size(); ++i) {
+        if (seed[i] == 0) continue;
       // calculate tile dimensions
       entities::dimensions dimensions{
         static_cast<float>(config::RESOLUTION.first / width),
@@ -117,18 +118,16 @@ namespace systems {
         static_cast<uint32_t>(i / width) * dimensions.y
       };
 
-      const auto color = seed[i] == 0 ? sf::Color::Black : sf::Color::Red;
-
       tile t{
-        {{0.f                + positions.x, 0.f                + positions.y}, color},
-        {{0.f + dimensions.x + positions.x, 0.f                + positions.y}, color},
-        {{0.f + dimensions.x + positions.x, 0.f + dimensions.y + positions.y}, color},
-        {{0.f                + positions.x, 0.f + dimensions.y + positions.y}, color},
+        {{0.f                + positions.x, 0.f                + positions.y}, sf::Color::Red},
+        {{0.f + dimensions.x + positions.x, 0.f                + positions.y}, sf::Color::Red},
+        {{0.f + dimensions.x + positions.x, 0.f + dimensions.y + positions.y}, sf::Color::Red},
+        {{0.f                + positions.x, 0.f + dimensions.y + positions.y}, sf::Color::Red},
       };
 
       entities::render render { sf::Quads, std::move(t) };
 
-      components::cell cell{ render, positions.coordinates(utils::coordinates::world), dimensions };
+      components::cell cell{ render, positions, dimensions };
 
       cells.emplace(
         std::piecewise_construct,

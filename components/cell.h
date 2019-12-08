@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../entities/render.h"
+#include "../config.h"
 
 namespace components {
 
@@ -10,3 +11,4 @@ namespace components {
     entities::dimensions  dimensions;
   };
 }
+

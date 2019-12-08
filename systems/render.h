@@ -3,6 +3,8 @@
 #include <gsl/span>
 #include <variant>
 #include <iostream>
+#define _USE_MATH_DEFINES // for C++
+#include <math.h>
 #include "../components/components.h"
 
 namespace systems {
@@ -15,9 +17,9 @@ namespace systems {
       
       void operator()(components::container& container) {
         _window->clear(sf::Color::Black);
-        // render user in the right position
-
+        // for each renderizable component
         container.apply_if<components::is_renderizable>([&](auto&& component) {
+          // render player
           if constexpr (components::is_component_v<decltype(component), components::player>) {
             component.render = renderUser(component.position);
           }

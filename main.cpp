@@ -23,7 +23,8 @@ int main() {
   // list sytstems
   systems::container systems{
     systems::render{ window },
-    systems::movement{}
+    systems::movement{},
+    systems::collision{},
   };
 
   while (window->isOpen()) {

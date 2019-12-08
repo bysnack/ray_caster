@@ -29,7 +29,9 @@ namespace components {
     // speed entity present
     std::is_same<decltype(std::remove_cv_t<std::remove_reference_t<component_t>>::speed), entities::speed>,
     // position entity present
-    std::is_same<decltype(std::remove_cv_t<std::remove_reference_t<component_t>>::position), entities::position>
+    std::is_same<decltype(std::remove_cv_t<std::remove_reference_t<component_t>>::position), entities::position>,
+    // heading entity present
+    std::is_same<decltype(std::remove_cv_t<std::remove_reference_t<component_t>>::heading), entities::heading>
   >> : public std::true_type{};
 
   template<class component_t, class = void>
