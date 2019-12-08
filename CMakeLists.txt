@@ -25,18 +25,17 @@ set(SYSTEMS_HEADERS		systems/collision.h
 						systems/render.h
 						systems/systems.h)
 
-set(COMPONENTS_HEADERS	components/cell.h
-						components/components.h
-						components/container.h
-						components/player.h
-						components/traits.h)
+set(ENTITIES_HEADERS	entities/cell.h
+						entities/entities.h
+						entities/container.h
+						entities/player.h
+						entities/traits.h)
 
-set(ENTITIES_HEADERS	entities/colliding.h
-						entities/dimensions.h
-						entities/heading.h
-						entities/position.h
-						entities/render.h
-						entities/speed.h)
+set(COMPONENTS_HEADERS	components/dimensions.h
+						components/heading.h
+						components/position.h
+						components/render.h
+						components/speed.h)
 
 set(UTILITIES_HEADERS	utils/utilities.h
 						utils/vector.h)
