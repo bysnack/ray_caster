@@ -7,6 +7,26 @@
 #include <math.h>
 #include "../components/components.h"
 
+namespace {
+    entities::render calculate_player_render(const components::player& player)
+    {
+        auto segments = static_cast<size_t>(player.dimensions.x);
+        auto radius   = static_cast<size_t>(player.dimensions.y / 2);
+
+        std::vector<sf::Vertex> vertices;
+        vertices.reserve(segments);
+        for (size_t i = 0; i < segments; ++i) {
+            float theta = 2.f * M_PI * static_cast<float>(i) / static_cast<float>(segments);
+            utils::vector<float> vertexPos{
+              radius * cosf(theta),
+              radius * sinf(theta)
+            };
+            vertices.emplace_back(vertexPos + player.position, sf::Color::Green);
+        }
+        return { sf::TriangleFan, std::move(vertices) };
+    }
+}
+
 namespace systems {
 
   class render {
@@ -21,32 +41,13 @@ namespace systems {
         container.apply_if<components::is_renderizable>([&](auto&& component) {
           // render player
           if constexpr (components::is_component_v<decltype(component), components::player>) {
-            component.render = renderUser(component.position);
+            component.render = calculate_player_render(component);
           }
           const auto& [type, vertices] = component.render;
           _window->draw(vertices.data(), vertices.size(), type);
         });
 
         _window->display();
-      }
-
-    private:
-      entities::render renderUser(const utils::vector<float>& position)
-      {
-        static constexpr const size_t segments{ 10  };
-        static constexpr const size_t radius  { 5   };
-
-        std::vector<sf::Vertex> vertices;
-        vertices.reserve(segments);
-        for (size_t i = 0; i < segments; ++i) {
-          float theta = 2.f * M_PI * static_cast<float>(i) / static_cast<float>(segments);
-          utils::vector<float> vertexPos{
-            radius * cosf(theta),
-            radius * sinf(theta)
-          };
-          vertices.emplace_back(vertexPos + position, sf::Color::Green);
-        }
-        return { sf::TriangleFan, std::move(vertices) };
       }
 
     private:
