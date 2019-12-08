@@ -6,7 +6,7 @@
 #include "movement.h"
 #include "ray_cast.h"
 #include "render.h"
-#include "../components/container.h"
+#include "../entities/container.h"
 
 
 namespace systems {
@@ -19,15 +19,15 @@ namespace systems {
 
         template<int index = 0>
         void run_all() {
-            // run the system with the components
-            std::get<index>(_systems)(_components);
+            // run the system with the corresponding entities
+            std::get<index>(_systems)(_entities);
             // try the next one
             if constexpr (index + 1 < std::tuple_size_v<systems_t>) {
                 run_all<index + 1>();
             }
         }
     private:
-        systems_t               _systems;
-        components::container   _components{};
+        systems_t           _systems;
+        entities::container _entities{};
     };
 }

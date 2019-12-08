@@ -104,26 +104,26 @@ namespace systems {
     *   Map initializer
     *
     *   @brief              Initializes the cells of a map
-    *   @param  container   The component container where to store the cells
+    *   @param  container   The entity container where to store the cells
     */
-    void initialize_map(components::container& container) {
+    void initialize_map(entities::container& container) {
         //auto seed = generateSeed();
 
         const auto& [width, height] = dimensions;
         std::vector<tile> tiles;
         tiles.reserve(seed.size());
 
-        auto& cells = container.get<components::cell>();
+        auto& cells = container.get<entities::cell>();
 
         for (auto i = 0u; i < seed.size(); ++i) {
             if (seed[i] == 0) continue;
             // calculate tile dimensions
-            entities::dimensions dimensions{
+            components::dimensions dimensions{
               static_cast<float>(config::RESOLUTION.first / width),
               static_cast<float>(config::RESOLUTION.second / height)
             };
 
-            entities::position positions{
+            components::position positions{
               (i % width) * dimensions.x,
               static_cast<uint32_t>(i / width)* dimensions.y
             };
@@ -135,9 +135,9 @@ namespace systems {
               {{0.f + positions.x, 0.f + dimensions.y + positions.y}, sf::Color::Red},
             };
 
-            entities::render render{ sf::Quads, std::move(t) };
+            components::render render{ sf::Quads, std::move(t) };
 
-            components::cell cell{ render, positions, dimensions };
+            entities::cell cell{ render, positions, dimensions };
 
             cells.emplace(
                 std::piecewise_construct,

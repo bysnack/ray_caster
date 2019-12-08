@@ -1,6 +1,6 @@
 #pragma once
 
-namespace entities {
+namespace components {
     enum class heading {
         north,
         south,

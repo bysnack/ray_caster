@@ -3,7 +3,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 
-#include "../components/components.h"
+#include "../entities/entities.h"
 
 
 namespace systems {
@@ -11,7 +11,7 @@ namespace systems {
     class render {
     public:
         render(std::shared_ptr<sf::RenderWindow> window);
-        void operator()(components::container& container) noexcept;
+        void operator()(entities::container& container) noexcept;
 
     private:
         std::shared_ptr<sf::RenderWindow> _window;

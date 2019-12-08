@@ -3,9 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include "../utils/vector.h"
 #include "../utils/utilities.h"
-#include "../components/components.h"
+#include "../entities/entities.h"
 
 
 namespace systems {
-    void movement(components::container& container) noexcept;
+    void movement(entities::container& container) noexcept;
 }

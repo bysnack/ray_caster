@@ -1,5 +1,7 @@
 #include "collision.h"
 #include "../utils/vector.h"
+#include "../components/components.h"
+
 
 /*
 *   Anonymous namespace
@@ -14,19 +16,19 @@ namespace {
     *   @param  heading     The heading entity of the movable component 
     *   @returns            The calculated position modifier
     */
-    utils::vector<float> heading_to_pos_modifier(entities::heading heading) {
+    utils::vector<float> heading_to_pos_modifier(components::heading heading) {
         utils::vector<float> modifier{ 0.f, 0.f };
         switch (heading) {
-        case entities::heading::east:
+        case components::heading::east:
             modifier = { -1.f, 0.f };
             break;
-        case entities::heading::west:
+        case components::heading::west:
             modifier = { 1.f, 0.f };
             break;
-        case entities::heading::south:
+        case components::heading::south:
             modifier = { 0.f, -1.f };
             break;
-        case entities::heading::north:
+        case components::heading::north:
             modifier = { 0.f, 1.f };
             break;
         }
@@ -41,14 +43,14 @@ namespace {
     *   @param  component   The component to detect collisions with
     *   @returns            Whether a collision was detected or not
     */
-    template<class component_t>
-    bool detect_collision(const components::container::components<components::cell>& cells, const component_t& component) {
-        entities::position user_position{ component.position - (component.dimensions / 2) };
+    template<class entity_t>
+    bool detect_collision(const entities::container::entities<entities::cell>& cells, const entity_t& entity) {
+        components::position user_position{ entity.position - (entity.dimensions / 2) };
         for (auto&& cell : cells) {
             if (user_position.x < cell.second.position.x + cell.second.dimensions.x
-                && user_position.x + component.dimensions.x > cell.second.position.x
+                && user_position.x + entity.dimensions.x > cell.second.position.x
                 && user_position.y < cell.second.position.y + cell.second.dimensions.y
-                && user_position.y + component.dimensions.y > cell.second.position.y) {
+                && user_position.y + entity.dimensions.y > cell.second.position.y) {
                 return true;
             }
         }
@@ -63,13 +65,13 @@ namespace systems {
     *   @brief              Handles collisions
     *   @param  container   The container of all components
     */
-    void collision(components::container& container) noexcept {
+    void collision(entities::container& container) noexcept {
         // only movables can collisionate
-        container.apply_if<components::is_movable>([&](auto&& elem) {
+        container.apply_if<entities::is_movable>([&](auto&& entity) {
             // detect collisions with map cells
-            if (detect_collision(container.get<components::cell>(), elem)) {
+            if (detect_collision(container.get<entities::cell>(), entity)) {
                 // step back if a collision was detected
-                elem.position += heading_to_pos_modifier(elem.heading) * elem.speed;
+                entity.position += heading_to_pos_modifier(entity.heading) * entity.speed;
             }
         });
     }

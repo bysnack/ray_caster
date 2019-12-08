@@ -11,7 +11,7 @@
 *   @brief  Contains a set of helper functions used by the movement system
 */
 namespace {
-    std::tuple<utils::vector<float>, entities::heading> capture_movement(float speed, entities::heading heading) {
+    std::tuple<utils::vector<float>, components::heading> capture_movement(float speed, components::heading heading) {
         // unity advance vectors
         const utils::vector<float> x_unity{ speed, 0.f };
         const utils::vector<float> y_unity{ 0.f, speed };
@@ -21,19 +21,19 @@ namespace {
         // on key pressed
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
             position += x_unity;
-            heading = entities::heading::east;
+            heading = components::heading::east;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             position -= x_unity;
-            heading = entities::heading::west;
+            heading = components::heading::west;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             position += y_unity;
-            heading = entities::heading::south;
+            heading = components::heading::south;
         }
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             position -= y_unity;
-            heading = entities::heading::north;
+            heading = components::heading::north;
         }
 
         return { position, heading };
@@ -41,11 +41,11 @@ namespace {
 }
 
 namespace systems {
-    void movement(components::container& container) noexcept {
-        // only on movable components
-        container.apply_if<components::is_movable>([&](auto&& elem) {
+    void movement(entities::container& container) noexcept {
+        // only on movable entities
+        container.apply_if<entities::is_movable>([&](auto&& elem) {
             // player
-            if constexpr (components::is_component_v<decltype(elem), components::player>) {
+            if constexpr (entities::is_entity_v<decltype(elem), entities::player>) {
                 auto [position, heading] = capture_movement(elem.speed, elem.heading);
                 elem.position += std::move(position);
                 elem.heading = heading;

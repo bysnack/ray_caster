@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../components/components.h"
+#include "../entities/entities.h"
 
 
 namespace systems {
     /*
     *   Collision system.
     *
-    *   @brief  Handles collisions for movable components 
+    *   @brief  Handles collisions for movable entities 
     */
-    void collision(components::container& container) noexcept;
+    void collision(entities::container& container) noexcept;
 }

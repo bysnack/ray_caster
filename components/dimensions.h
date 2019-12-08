@@ -2,6 +2,6 @@
 
 #include "../utils/vector.h"
 
-namespace entities {
+namespace components {
   using dimensions = utils::vector<float>;
 }

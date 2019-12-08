@@ -4,6 +4,6 @@
 #include <SFML/Graphics.hpp>
 
 
-namespace entities {
+namespace components {
   using render = std::tuple<sf::PrimitiveType, std::vector<sf::Vertex>>;
 }

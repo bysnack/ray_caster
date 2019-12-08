@@ -6,9 +6,9 @@ namespace systems {
         _systems{ std::make_tuple(std::move(render), &movement, &collision) }
     {
         // initialize one player
-        _components.insert_or_replace(components::player{}, 0);
+        _entities.insert_or_replace(entities::player{}, 0);
 
         // initialize map cells
-        initialize_map(_components);
+        initialize_map(_entities);
     }
 }

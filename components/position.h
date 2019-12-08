@@ -2,6 +2,6 @@
 
 #include "../utils/vector.h"
 
-namespace entities {
+namespace components {
   using position = utils::vector<float>;
 };

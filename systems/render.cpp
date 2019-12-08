@@ -9,7 +9,7 @@
 
 namespace {
 
-    entities::render calculate_player_render(const components::player& player)
+    components::render calculate_player_render(const entities::player& player)
     {
         auto segments = static_cast<size_t>(player.dimensions.x);
         auto radius = static_cast<size_t>(player.dimensions.y / 2);
@@ -34,15 +34,15 @@ namespace systems {
         _window{ std::move(window) }
     {}
 
-    void render::operator()(components::container& container) noexcept {
+    void render::operator()(entities::container& container) noexcept {
         _window->clear(sf::Color::Black);
-        // for each renderizable component
-        container.apply_if<components::is_renderizable>([&](auto&& component) {
+        // apply only to renderizable entities
+        container.apply_if<entities::is_renderizable>([&](auto&& entity) {
             // render player
-            if constexpr (components::is_component_v<decltype(component), components::player>) {
-                component.render = calculate_player_render(component);
+            if constexpr (entities::is_entity_v<decltype(entity), entities::player>) {
+                entity.render = calculate_player_render(entity);
             }
-            const auto& [type, vertices] = component.render;
+            const auto& [type, vertices] = entity.render;
             _window->draw(vertices.data(), vertices.size(), type);
             });
 

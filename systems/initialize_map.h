@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../components/components.h"
+#include "../entities/entities.h"
 
 
 namespace systems {
@@ -12,5 +12,5 @@ namespace systems {
     *   @brief              Initializes the cells of a map
     *   @param  container   The component container where to store the cells
     */
-    void initialize_map(components::container& container);
+    void initialize_map(entities::container& container);
 }

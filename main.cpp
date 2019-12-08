@@ -1,12 +1,6 @@
-#include <iostream>
 #include <SFML/Graphics.hpp>
-#include <cmath>
-#include <gsl/span>
-#include <variant>
-#include "utils/utilities.h"
 #include "systems/systems.h"
-#include "entities/entities.h"
-#include "components/components.h"
+
 
 int main() {
 

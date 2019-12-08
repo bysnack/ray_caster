@@ -1,6 +1,5 @@
 #pragma once
 
-namespace entities {
-
+namespace components {
   using speed = float;
 }

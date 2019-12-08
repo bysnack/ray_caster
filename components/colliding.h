@@ -1,5 +1,5 @@
 #pragma once
 
-namespace entities {
+namespace components {
   using colliding = bool;
 }
