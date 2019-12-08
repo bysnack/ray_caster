@@ -17,7 +17,7 @@ namespace {
         std::vector<sf::Vertex> vertices;
         vertices.reserve(segments);
         for (size_t i = 0; i < segments; ++i) {
-            float theta = 2.f * M_PI * static_cast<float>(i) / static_cast<float>(segments);
+            float theta = 2.f * static_cast<float>(M_PI) * static_cast<float>(i) / static_cast<float>(segments);
             utils::vector<float> vertexPos{
               radius * cosf(theta),
               radius * sinf(theta)
