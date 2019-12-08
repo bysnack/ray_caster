@@ -35,7 +35,7 @@ namespace utils {
   * @param screenCoordinates   The screen coordinats to transform
   * @returns                   The transformed world coordinates
   */
-  sf::Vector2f toWorldCoordinates(const sf::Vector2f& screenCoordinates) {
+  inline sf::Vector2f toWorldCoordinates(const sf::Vector2f& screenCoordinates) {
     return { (screenCoordinates.x * config::MAP_SIZE.first) / config::RESOLUTION.first, (screenCoordinates.y * config::MAP_SIZE.second) / config::RESOLUTION.second };
   }
 
@@ -44,7 +44,7 @@ namespace utils {
   * @param worldCoordinates    The world coordinats to transform
   * @returns                   The transformed screen coordinates
   */
-  sf::Vector2f toScreenCoordinates(const sf::Vector2f& worldCoordinates) {
+  inline sf::Vector2f toScreenCoordinates(const sf::Vector2f& worldCoordinates) {
     return { (worldCoordinates.x * config::RESOLUTION.first) / config::MAP_SIZE.first, (worldCoordinates.y * config::RESOLUTION.second) / config::MAP_SIZE.second };
   }
 
@@ -53,7 +53,7 @@ namespace utils {
   * @param pixelPos            The pixel position to transform
   * @returns                   The transformed tile position
   */
-  sf::Vector2u toTilePos(const sf::Vector2f& pixelPos) {
+  inline sf::Vector2u toTilePos(const sf::Vector2f& pixelPos) {
     uint32_t x = static_cast<uint32_t>((pixelPos.x * config::MAP_SIZE.first) / config::RESOLUTION.first);
     uint32_t y = static_cast<uint32_t>((pixelPos.y * config::MAP_SIZE.second) / config::RESOLUTION.second);
     return { x, y };

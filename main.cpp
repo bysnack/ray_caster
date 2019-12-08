@@ -13,20 +13,10 @@ int main() {
   auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(config::RESOLUTION.first, config::RESOLUTION.second), "Caster");
   window->setFramerateLimit(60);
 
-  // list components
-  components::container components;
+  // initialize the systems
+  systems::systems systems{ window };
 
-  components.insert_or_replace(components::player{}, 0);
-
-  systems::initialize_map(components);
-
-  // list sytstems
-  systems::container systems{
-    systems::render{ window },
-    systems::movement{},
-    systems::collision{},
-  };
-
+  // game loop
   while (window->isOpen()) {
     sf::Event event;
     while (window->pollEvent(event)) {
@@ -35,7 +25,7 @@ int main() {
       }
     }
 
-    systems.run_all(components);
+    systems.run_all();
   }
   return 0;
 }
