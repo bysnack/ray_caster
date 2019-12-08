@@ -1,5 +1,7 @@
 #pragma once
 
+
 namespace components {
-  using speed = float;
+	
+	using speed = float;
 }

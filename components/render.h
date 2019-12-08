@@ -5,5 +5,6 @@
 
 
 namespace components {
-  using render = std::tuple<sf::PrimitiveType, std::vector<sf::Vertex>>;
+
+	using render = std::tuple<sf::PrimitiveType, std::vector<sf::Vertex>>;
 }

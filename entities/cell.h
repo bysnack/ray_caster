@@ -7,10 +7,10 @@
 
 namespace entities {
 
-  struct cell {
-    components::render      render;
-    components::position    position;
-    components::dimensions  dimensions;
-  };
+	struct cell {
+		components::render      render;
+		components::position    position;
+		components::dimensions  dimensions;
+	};
 }
 
