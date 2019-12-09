@@ -16,7 +16,6 @@ namespace systems {
 
         systems(std::shared_ptr<sf::RenderWindow> render);
 
-        template<int index = 0>
         void run_all() {
             for_each([this](auto&& system){
                 system(_entities);
