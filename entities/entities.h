@@ -11,8 +11,8 @@ namespace entities {
     class entities {
     public:
         template<class entitiy_t>
-        using value_type      = std::unordered_map<uint64_t, std::remove_cv_t<std::remove_reference_t<entitiy_t>>>;
-        using underlying_type = std::tuple<value_type<cell>, value_type<player>>;
+        using value_type    = std::unordered_map<uint64_t, std::remove_cv_t<std::remove_reference_t<entitiy_t>>>;
+        using container     = std::tuple<value_type<cell>, value_type<player>>;
 
         template<class entitiy_t>
         void insert_or_replace(entitiy_t&& component, uint64_t identifier) {
@@ -41,7 +41,7 @@ namespace entities {
             handler(std::get<index>(_entities));
 
             // try to run the next set of entities
-            if constexpr (index < std::tuple_size_v<underlying_type> -1) {
+            if constexpr (index < std::tuple_size_v<container> -1) {
                 for_each<handler_t, index + 1>(std::forward<handler_t>(handler));
             }
         }
@@ -51,6 +51,6 @@ namespace entities {
             return std::get<value_type<entitiy_t>>(_entities);
         }
     private:
-        underlying_type _entities;
+        container _entities;
     };
 }
