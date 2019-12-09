@@ -11,7 +11,7 @@ namespace systems {
     class render {
     public:
         render(std::shared_ptr<sf::RenderWindow> window);
-        void operator()(entities::container& container) noexcept;
+        void operator()(entities::entities& entities) noexcept;
 
     private:
         std::shared_ptr<sf::RenderWindow> _window;

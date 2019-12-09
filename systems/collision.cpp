@@ -44,7 +44,7 @@ namespace {
     *   @returns            Whether a collision was detected or not
     */
     template<class entity_t>
-    bool detect_collision(const entities::container::value_type<entities::cell>& cells, const entity_t& entity) {
+    bool detect_collision(const entities::entities::value_type<entities::cell>& cells, const entity_t& entity) {
         components::position user_position{ entity.position - (entity.dimensions / 2) };
         for (auto&& cell : cells) {
             if (user_position.x < cell.second.position.x + cell.second.dimensions.x
@@ -65,11 +65,11 @@ namespace systems {
     *   @brief              Handles collisions
     *   @param  container   The container of all components
     */
-    void collision(entities::container& container) noexcept {
+    void collision(entities::entities& entities) noexcept {
         // only movables can collisionate
-        container.apply_if<entities::is_movable>([&](auto&& entity) {
+        entities.apply_if<entities::is_movable>([&](auto&& entity) {
             // detect collisions with map cells
-            if (detect_collision(container.get<entities::cell>(), entity)) {
+            if (detect_collision(entities.get<entities::cell>(), entity)) {
                 // step back if a collision was detected
                 entity.position += heading_to_pos_modifier(entity.heading) * entity.speed;
             }

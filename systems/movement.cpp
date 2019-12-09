@@ -41,9 +41,9 @@ namespace {
 }
 
 namespace systems {
-    void movement(entities::container& container) noexcept {
+    void movement(entities::entities& entities) noexcept {
         // only on movable entities
-        container.apply_if<entities::is_movable>([&](auto&& elem) {
+        entities.apply_if<entities::is_movable>([&](auto&& elem) {
             // player
             if constexpr (entities::is_entity_v<decltype(elem), entities::player>) {
                 auto [position, heading] = capture_movement(elem.speed, elem.heading);

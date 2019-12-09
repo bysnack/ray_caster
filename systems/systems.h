@@ -4,9 +4,8 @@
 
 #include "collision.h"
 #include "movement.h"
-#include "ray_cast.h"
 #include "render.h"
-#include "../entities/container.h"
+#include "../entities/entities.h"
 
 
 namespace systems {
@@ -36,6 +35,6 @@ namespace systems {
         }
     private:
         systems_t           _systems;
-        entities::container _entities{};
+        entities::entities  _entities{};
     };
 }

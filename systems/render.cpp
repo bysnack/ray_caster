@@ -34,10 +34,10 @@ namespace systems {
         _window{ std::move(window) }
     {}
 
-    void render::operator()(entities::container& container) noexcept {
+    void render::operator()(entities::entities& entities) noexcept {
         _window->clear(sf::Color::Black);
         // apply only to renderizable entities
-        container.apply_if<entities::is_renderizable>([&](auto&& entity) {
+        entities.apply_if<entities::is_renderizable>([&](auto&& entity) {
             // render player
             if constexpr (entities::is_entity_v<decltype(entity), entities::player>) {
                 entity.render = calculate_player_render(entity);

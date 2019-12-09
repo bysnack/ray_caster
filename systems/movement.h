@@ -7,5 +7,5 @@
 
 
 namespace systems {
-    void movement(entities::container& container) noexcept;
+    void movement(entities::entities& container) noexcept;
 }
