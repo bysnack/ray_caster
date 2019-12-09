@@ -44,7 +44,7 @@ namespace {
     *   @returns            Whether a collision was detected or not
     */
     template<class entity_t>
-    bool detect_collision(const entities::container::entities<entities::cell>& cells, const entity_t& entity) {
+    bool detect_collision(const entities::container::value_type<entities::cell>& cells, const entity_t& entity) {
         components::position user_position{ entity.position - (entity.dimensions / 2) };
         for (auto&& cell : cells) {
             if (user_position.x < cell.second.position.x + cell.second.dimensions.x
