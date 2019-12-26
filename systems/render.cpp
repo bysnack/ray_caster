@@ -37,7 +37,7 @@ namespace systems {
     void render::operator()(entities::entities& entities) noexcept {
         _window->clear(sf::Color::Black);
         // apply only to renderizable entities
-        entities.apply_if<entities::is_renderizable>([&](auto&& entity) {
+        entities.apply_to<entities::renderizable>([&](auto&& entity) {
             // render player
             if constexpr (entities::is_entity_v<decltype(entity), entities::player>) {
                 entity.render = calculate_player_render(entity);

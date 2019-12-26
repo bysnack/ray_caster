@@ -67,7 +67,7 @@ namespace systems {
     */
     void collision(entities::entities& entities) noexcept {
         // only movables can collisionate
-        entities.apply_if<entities::is_movable>([&](auto&& entity) {
+        entities.apply_to<entities::movable>([&](auto&& entity) {
             // detect collisions with map cells
             if (detect_collision(entities.get<entities::cell>(), entity)) {
                 // step back if a collision was detected

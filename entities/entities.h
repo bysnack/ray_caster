@@ -20,7 +20,7 @@ namespace entities {
         }
 
         template<template<class entitiy_t> class trait_t, class handler_t>
-        void apply_if(handler_t&& handler) {
+        void apply_to(handler_t&& handler) {
             // for each entity container
             for_each([handler = std::forward<handler_t>(handler), this](auto&& entities) {
                 // get the mapped type
