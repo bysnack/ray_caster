@@ -35,21 +35,19 @@ namespace entities {
             });
         }
 
-        template<class handler_t, size_t index = 0>
+        template<class handler_t>
         void for_each(handler_t&& handler) {
-            // run handler with entity map
-            handler(std::get<index>(_entities));
-
-            // try to run the next set of entities
-            if constexpr (index < std::tuple_size_v<container> -1) {
-                for_each<handler_t, index + 1>(std::forward<handler_t>(handler));
-            }
+            // apply handler to each entity in the tuple
+            std::apply([handler = std::forward<handler_t>(handler), this](auto&& ...entity) {
+                (handler(entity), ...);
+            }, _entities);
         }
 
         template<class entitiy_t>
         decltype(auto) get() {
             return std::get<value_type<entitiy_t>>(_entities);
         }
+
     private:
         container _entities;
     };

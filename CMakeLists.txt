@@ -27,7 +27,6 @@ set(SYSTEMS_HEADERS		systems/collision.h
 
 set(ENTITIES_HEADERS	entities/cell.h
 						entities/entities.h
-						entities/container.h
 						entities/player.h
 						entities/traits.h)
 
@@ -38,7 +37,8 @@ set(COMPONENTS_HEADERS	components/dimensions.h
 						components/speed.h)
 
 set(UTILITIES_HEADERS	utils/utilities.h
-						utils/vector.h)
+						utils/vector.h
+						utils/iterable_tuple.h)
 
 set(SYSTEMS_SOURCE		systems/collision.cpp
 						systems/initialize_map.cpp
