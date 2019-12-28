@@ -6,12 +6,6 @@
 
 namespace entities {
 
-	// template<class Target, class Comp>
-	//struct belongsToComponent;
-
-	// template<class Target, class ...Alts>
-	//struct belongsToComponent<Target, Component<Alts...>> : public std::disjunction<std::is_same<Target, Alts>...> {};
-
 	template<class entity_t, class = void>
 	struct renderizable : public std::false_type{};
 

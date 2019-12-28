@@ -9,5 +9,11 @@ namespace systems {
 	*
 	*   @brief  Handles collisions for movable entities 
 	*/
-	void collision(entities::entities& container) noexcept;
+	class collision {
+	public:
+		collision(entities::entities& container) noexcept;
+		void operator()() noexcept;
+	private:
+		entities::entities& _entities;
+	};
 }

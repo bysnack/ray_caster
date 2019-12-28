@@ -5,6 +5,7 @@
 
 #include "player.h"
 #include "cell.h"
+#include "ray.h"
 
 namespace entities {
 

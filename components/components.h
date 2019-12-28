@@ -6,3 +6,4 @@
 #include "speed.h"
 #include "dimensions.h"
 #include "heading.h"
+#include "intersection.h"

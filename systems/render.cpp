@@ -30,14 +30,15 @@ namespace {
 
 namespace systems {
 
-    render::render(std::shared_ptr<sf::RenderWindow> window) :
+    render::render(entities::entities& container, std::shared_ptr<sf::RenderWindow> window) :
+        _entities{ container },
         _window{ std::move(window) }
     {}
 
-    void render::operator()(entities::entities& entities) noexcept {
+    void render::operator()() noexcept {
         _window->clear(sf::Color::Black);
         // apply only to renderizable entities
-        entities.apply_to<entities::renderizable>([&](auto&& entity) {
+        _entities.apply_to<entities::renderizable>([&](auto&& entity) {
             // render player
             if constexpr (entities::is_entity_v<decltype(entity), entities::player>) {
                 entity.render = calculate_player_render(entity);

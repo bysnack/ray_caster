@@ -59,17 +59,21 @@ namespace {
 }
 
 namespace systems {
+    collision::collision(entities::entities& container) noexcept :
+        _entities{ container }
+    {}
+
     /*
     *   Collisions system functor
     *
     *   @brief              Handles collisions
     *   @param  container   The container of all components
     */
-    void collision(entities::entities& entities) noexcept {
+    void collision::operator()() noexcept {
         // only movables can collisionate
-        entities.apply_to<entities::movable>([&](auto&& entity) {
+        _entities.apply_to<entities::movable>([&](auto&& entity) {
             // detect collisions with map cells
-            if (detect_collision(entities.get<entities::cell>(), entity)) {
+            if (detect_collision(_entities.get<entities::cell>(), entity)) {
                 // step back if a collision was detected
                 entity.position += heading_to_pos_modifier(entity.heading) * entity.speed;
             }
