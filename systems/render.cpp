@@ -11,8 +11,9 @@ namespace {
 
     components::render calculate_player_render(const entities::player& player)
     {
-        auto segments = static_cast<size_t>(player.dimensions.x);
-        auto radius = static_cast<size_t>(player.dimensions.y / 2);
+        auto screen_dimentions = static_cast<utils::coordinates::screen>(player.dimensions);
+        auto segments = static_cast<size_t>(screen_dimentions.x);
+        auto radius = static_cast<size_t>(screen_dimentions.y / 2);
 
         std::vector<sf::Vertex> vertices;
         vertices.reserve(segments);
@@ -22,9 +23,9 @@ namespace {
               radius * cosf(theta),
               radius * sinf(theta)
             };
-            vertices.emplace_back(vertexPos + player.position, sf::Color::Green);
+            vertices.emplace_back(vertexPos + static_cast<utils::coordinates::screen>(player.position), sf::Color::Green);
         }
-        return { sf::TriangleFan, std::move(vertices) };
+        return { sf::TriangleFan, std::move(vertices), {} };
     }
 }
 
@@ -43,8 +44,8 @@ namespace systems {
             if constexpr (entities::is_entity_v<decltype(entity), entities::player>) {
                 entity.render = calculate_player_render(entity);
             }
-            const auto& [type, vertices] = entity.render;
-            _window->draw(vertices.data(), vertices.size(), type);
+            const auto& [type, vertices, state] = entity.render;
+            _window->draw(vertices.data(), vertices.size(), type, state);
             });
 
         _window->display();

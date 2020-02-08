@@ -6,14 +6,14 @@
 #include "movement.h"
 #include "render.h"
 #include "../entities/entities.h"
-//#include "ray_caster.h"
+#include "lights.h"
 
 
 namespace systems {
 
     class systems {
     public:
-        using systems_t = std::tuple<render, movement, collision>;
+        using systems_t = std::tuple<render, movement, collision, lights>;
 
         systems(std::shared_ptr<sf::RenderWindow> window);
 

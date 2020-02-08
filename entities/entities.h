@@ -5,6 +5,8 @@
 
 #include "player.h"
 #include "cell.h"
+#include "light.h"
+#include "map.h"
 #include "ray.h"
 
 namespace entities {
@@ -13,11 +15,11 @@ namespace entities {
     public:
         template<class entitiy_t>
         using value_type    = std::unordered_map<uint64_t, std::remove_cv_t<std::remove_reference_t<entitiy_t>>>;
-        using container     = std::tuple<value_type<cell>, value_type<player>>;
+        using container     = std::tuple<value_type<light>, value_type<map>, value_type<ray>, value_type<cell>, value_type<player>>;
 
         template<class entitiy_t>
-        void insert_or_replace(entitiy_t&& component, uint64_t identifier) {
-            std::get<value_type<entitiy_t>>(_entities)[identifier] = component;
+        void insert_or_replace(entitiy_t&& entity, uint64_t identifier) {
+            std::get<value_type<entitiy_t>>(_entities)[identifier] = entity;
         }
 
         template<template<class entitiy_t> class trait_t, class handler_t>

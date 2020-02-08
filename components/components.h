@@ -7,3 +7,4 @@
 #include "dimensions.h"
 #include "heading.h"
 #include "intersection.h"
+#include "seed.h"

@@ -3,6 +3,7 @@
 #include <type_traits>
 #include <tuple>
 #include "../components/components.h"
+#include "light.h"
 
 namespace entities {
 
@@ -28,6 +29,9 @@ namespace entities {
 		std::is_same<decltype(std::remove_cv_t<std::remove_reference_t<entity_t>>::heading), components::heading>
 	>> : public std::true_type{};
 
+	template<class entity_t>
+	using casteable = std::is_same<entity_t, light>;
+
 	template<class entity_t, class = void>
 	struct collisionable : public std::false_type{};
 
@@ -45,4 +49,5 @@ namespace entities {
 
 	template<class target_t, class entity_t>
 	constexpr bool is_entity_v = std::is_same_v<std::remove_cv_t<std::remove_reference_t<target_t>>, entity_t>;
+
 }

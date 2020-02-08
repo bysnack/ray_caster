@@ -94,6 +94,7 @@ namespace {
      1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
      1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
      1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
+     1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
      1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
     };
 }
@@ -109,6 +110,8 @@ namespace systems {
     void initialize_map(entities::entities& container) {
         //auto seed = generateSeed();
 
+        container.insert_or_replace(entities::map{}, 0);
+
         const auto& [width, height] = dimensions;
         std::vector<tile> tiles;
         tiles.reserve(seed.size());
@@ -118,15 +121,16 @@ namespace systems {
         for (auto i = 0u; i < seed.size(); ++i) {
             if (seed[i] == 0) continue;
             // calculate tile dimensions
-            components::dimensions dimensions{
-              static_cast<float>(config::RESOLUTION.first / width),
-              static_cast<float>(config::RESOLUTION.second / height)
+           utils::coordinates::world world_dimensions { 1.f, 1.f };
+           auto dimensions = static_cast<utils::coordinates::screen>(world_dimensions);
+
+            utils::coordinates::world world_position {
+              floorf((i % width)),
+              floorf((i / width))
             };
 
-            components::position positions{
-              (i % width) * dimensions.x,
-              static_cast<uint32_t>(i / width)* dimensions.y
-            };
+
+            auto positions = static_cast<utils::coordinates::screen>(world_position);
 
             components::render render{ 
               sf::Quads, {
@@ -134,14 +138,15 @@ namespace systems {
               {{0.f + dimensions.x + positions.x, 0.f + positions.y}, sf::Color::Red},
               {{0.f + dimensions.x + positions.x, 0.f + dimensions.y + positions.y}, sf::Color::Red},
               {{0.f + positions.x, 0.f + dimensions.y + positions.y}, sf::Color::Red},
-             }};
+             },{
+             } };
 
-            entities::cell cell{ render, positions, dimensions };
+            entities::cell cell{ std::move(render), std::move(positions), std::move(world_dimensions) };
 
             cells.emplace(
                 std::piecewise_construct,
                 std::forward_as_tuple(i),
-                std::forward_as_tuple(cell)
+                std::forward_as_tuple(std::move(cell))
             );
         }
     }

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../utils/vector.h"
+#include "../utils/coordinates/coordinates.h"
 
 
 namespace components {
 
-	using position = utils::vector<float>;
+	using position = utils::coordinates::world;
 };

@@ -5,5 +5,5 @@
 
 namespace components {
 
-	using dimensions = utils::coordinates::world;
+	using intersection = utils::vector<float>;
 }

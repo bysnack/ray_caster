@@ -11,123 +11,107 @@
 
 
 namespace utils {
-
-  enum class coordinates : uint8_t {
-    world,
-    screen,
-  };
   
-  template<class T, class = std::enable_if_t<std::is_arithmetic_v<T>>>
-  struct vector {
-    using value_type = T;
-    T x, y;
+    template<class T, class = std::enable_if_t<std::is_arithmetic_v<T>>>
+    struct vector {
+        using value_type = T;
+        T x, y;
 
-    vector(T x, T y) noexcept : 
-      x{ x },
-      y{ y }
-    {}
+        vector(T x , T y) noexcept : 
+            x{ x },
+            y{ y }
+        {}
 
-    vector(const sf::Vector2<T>& other) noexcept :
-      x{ other.x },
-      y{ other.y }
-    {}
+        vector(const sf::Vector2<T>& other) noexcept :
+            x{ other.x },
+            y{ other.y }
+        {}
 
-    vector<T>& operator+=(const vector<T>& other) noexcept {
-      x += other.x;
-      y += other.y;
+        vector<T>& operator+=(const vector<T>& other) noexcept {
+            x += other.x;
+            y += other.y;
 
-      return *this;
-    }
+            return *this;
+        }
 
-    vector<T>& operator-=(const vector<T>& other) noexcept {
-      x -= other.x;
-      y -= other.y;
+        vector<T>& operator-=(const vector<T>& other) noexcept {
+            x -= other.x;
+            y -= other.y;
 
-      return *this;
-    }
+            return *this;
+        }
 
-    vector<T>& operator*=(T multiplier) noexcept {
-      x *= multiplier;
-      y *= multiplier;
+        vector<T>& operator*=(T multiplier) noexcept {
+            x *= multiplier;
+            y *= multiplier;
 
-      return *this;
-    }
+            return *this;
+        }
 
-    vector<T>& operator/=(T divisor) noexcept {
-      x /= divisor;
-      y /= divisor;
+        vector<T>& operator/=(T divisor) noexcept {
+            x /= divisor;
+            y /= divisor;
 
-      return *this;
-    }
+            return *this;
+        }
 
-    vector<T> operator+(const vector<T>& other) const noexcept {
-      return { x + other.x, y + other.y };
-    }
+        vector<T> operator+(const vector<T>& other) const noexcept {
+            return { x + other.x, y + other.y };
+        }
 
-    vector<T> operator-(const vector<T>& other) const noexcept {
-      return { x - other.x, y - other.y };
-    }
+        vector<T> operator-(const vector<T>& other) const noexcept {
+            return { x - other.x, y - other.y };
+        }
 
-    vector<T> operator*(T multiplier) const noexcept {
-      return { x * multiplier, y * multiplier };
-    }
+        vector<T> operator*(T multiplier) const noexcept {
+            return { x * multiplier, y * multiplier };
+        }
 
-    vector<T> operator/(T dividend) const noexcept {
-      return { x / dividend, y / dividend };
-    }
+        vector<T> operator/(T dividend) const noexcept {
+            return { x / dividend, y / dividend };
+        }
 
-    operator sf::Vector2f() const noexcept { 
-      return { x, y }; 
-    } 
+        operator sf::Vector2f() const noexcept { 
+            return { static_cast<float>(x), static_cast<float>(y) }; 
+        } 
 
-    operator std::string() const noexcept {
-      std::stringstream ss;
-      ss << "X: " << x << " - " << "Y: " << y;
+        operator std::string() const noexcept {
+            std::stringstream ss;
+            ss << "X: " << x << " - " << "Y: " << y;
 
-      return ss.str();
-    }
+            return ss.str();
+        }
     
-    vector<float> operator%(float theta) const noexcept {
-      float cs = cosf(theta);
-      float sn = sinf(theta);
+        vector<float> operator%(float theta) const noexcept {
+            float cs = cosf(theta);
+            float sn = sinf(theta);
 
-      return{ x * cs - y * sn, x * sn + y * cs };
-    }
+            return{ x * cs - y * sn, x * sn + y * cs };
+        }
 
-    bool operator==(const vector<T>& other) const noexcept {
-      return x == other.x && y == other.y;
-    }
+        bool operator==(const vector<T>& other) const noexcept {
+            return x == other.x && y == other.y;
+        }
 
-    bool operator!=(const vector<T>& other) const noexcept {
-      return !(*this == other);
-    }
+        bool operator!=(const vector<T>& other) const noexcept {
+            return !(*this == other);
+        }
 
-    vector<T> dot(const vector<T>& other) const noexcept {
-      return { x * other.x + y * other.y };
-    }
+        vector<T> dot(const vector<T>& other) const noexcept {
+            return { x * other.x + y * other.y };
+        }
 
-    float angle() const noexcept {
-      return atan2f(x, y);
-    }
+        float angle() const noexcept {
+            return atan2f(x, y);
+        }
 
-    float magnitude() const noexcept {
-      return sqrtf(powf(x, 2) + powf(y, 2));
-    }
+        float magnitude() const noexcept {
+            return sqrtf(powf(x, 2) + powf(y, 2));
+        }
 
-    friend std::ostream& operator<<(std::ostream& os, const vector<T>& vector) {
-      os << std::string{ vector };
-      return os;
-    }
-
-    vector<T> coordinates(coordinates type, std::enable_if_t<std::is_floating_point_v<T>>* = 0) {
-      switch(type) {
-        case coordinates::world:
-          return { (x * config::RESOLUTION.first) / config::MAP_SIZE.first, (y * config::RESOLUTION.second) / config::MAP_SIZE.second };
-        case coordinates::screen:
-          return { (x * config::MAP_SIZE.first) / config::RESOLUTION.first, (y * config::MAP_SIZE.second) / config::RESOLUTION.second };
-        default:
-          return { -1.f, -1.f };
-      }
-    }
-  };
+        friend std::ostream& operator<<(std::ostream& os, const vector<T>& vector) {
+            os << std::string{ vector };
+            return os;
+        }
+    };
 }

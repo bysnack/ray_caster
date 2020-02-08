@@ -11,7 +11,7 @@ namespace utils {
   * @param epsilon  The epsilon to take in account for the comparison
   * @returns        A boolean indicator of the comparision results
   */
-  inline bool cmpf(float lhs, float rhs, float epsilon = 0.00005f)
+  inline bool cmpf(float lhs, float rhs, float epsilon = 0.0005f)
   {
       return (fabs(lhs - rhs) < epsilon);
   }
@@ -23,7 +23,8 @@ namespace utils {
   * @param end      The final point
   * @returns        The distance between both points
   */
-  inline float distance(const sf::Vector2f& begin, const sf::Vector2f& end) {
+  template<class Coordinates>
+  inline float distance(const Coordinates& begin, const Coordinates& end) {
     auto& [bx, by] = begin;
     auto& [ex, ey] = end;
 

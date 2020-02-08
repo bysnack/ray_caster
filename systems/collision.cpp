@@ -16,8 +16,8 @@ namespace {
     *   @param  heading     The heading entity of the movable component 
     *   @returns            The calculated position modifier
     */
-    utils::vector<float> heading_to_pos_modifier(components::heading heading) {
-        utils::vector<float> modifier{ 0.f, 0.f };
+    utils::coordinates::world heading_to_pos_modifier(components::heading heading) {
+        utils::coordinates::world modifier{ 0.f, 0.f };
         switch (heading) {
         case components::heading::east:
             modifier = { -1.f, 0.f };
@@ -45,12 +45,13 @@ namespace {
     */
     template<class entity_t>
     bool detect_collision(const entities::entities::value_type<entities::cell>& cells, const entity_t& entity) {
-        components::position user_position{ entity.position - (entity.dimensions / 2) };
+        auto [ecx, ecy] = entity.position - (entity.dimensions / 2);
         for (auto&& cell : cells) {
-            if (user_position.x < cell.second.position.x + cell.second.dimensions.x
-                && user_position.x + entity.dimensions.x > cell.second.position.x
-                && user_position.y < cell.second.position.y + cell.second.dimensions.y
-                && user_position.y + entity.dimensions.y > cell.second.position.y) {
+            const auto& [cx, cy] = cell.second.position;
+            if (ecx < cx + cell.second.dimensions.x
+                && ecx + entity.dimensions.x > cx
+                && ecy < cy + cell.second.dimensions.y
+                && ecy + entity.dimensions.y > cy) {
                 return true;
             }
         }
