@@ -34,9 +34,11 @@ public:
    * @brief           Constructor
    */
   Ray(const sf::Vector2f& begin, float angle, const Map& map) : 
-    _line{ begin, selectEndPoint(angle, begin, map) }
+    _line{ {{ begin, sf::Color::Green }, { selectEndPoint(angle, begin, map), sf::Color::Green}} }
   {
   }
+
+  auto getInter() const noexcept { return _line[1].position; };
 
 private:
   /**

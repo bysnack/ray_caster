@@ -1,31 +1,24 @@
-#include <iostream>
 #include <SFML/Graphics.hpp>
-#include <cmath>
-#include "Map.h"
-#include "User.h"
-
+#include "systems/systems.h"
+#include "utils/iterable_tuple.h"
 
 int main() {
-  
-  sf::RenderWindow window(sf::VideoMode(RESOLUTION.first, RESOLUTION.second), "Caster");
-  Map map;
-  User user{ map };
+    auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(config::RESOLUTION.first, config::RESOLUTION.second), "Caster");
+    window->setFramerateLimit(60);
 
-  while (window.isOpen()) {
-    sf::Event event;
-    while (window.pollEvent(event)) {
-      user.captureMovement();
-      if (event.type == sf::Event::Closed) {
-        window.close();
-      }
+    // initialize the systems
+    systems::systems systems{ window };
+
+    // game loop
+    while (window->isOpen()) {
+        sf::Event event;
+        while (window->pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window->close();
+            }
+        }
+
+        systems.run_all();
     }
-
-    window.clear(sf::Color::Black);
-
-    window.draw(map);
-    window.draw(user);
-
-    window.display();
-  }
-  return 0;
+    return 0;
 }
