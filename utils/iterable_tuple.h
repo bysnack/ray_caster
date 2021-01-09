@@ -39,7 +39,7 @@ public:
 	using underlying_tuple = std::tuple<elements_t...>;
 	template<class handler_t, size_t index_v = 0>
 	void for_each(handler_t&& handler) {
-		std::apply([handler = std::forward<handler_t>(handler)](auto&& elem) { (handler(elem), ...); });
+		std::apply([handler = std::forward<handler_t>(handler)](auto&& ...elem) { (handler(elem), ...); });
 	}
 
 private:

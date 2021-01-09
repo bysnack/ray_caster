@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utility>
+#include <cmath>
 #include "../config.h"
 
 namespace utils {

@@ -22,7 +22,7 @@ namespace entities {
             std::get<value_type<entitiy_t>>(_entities)[identifier] = entity;
         }
 
-        template<template<class entitiy_t> class trait_t, class handler_t>
+        template<template<class ...> class trait_t, class handler_t>
         void apply_to(handler_t&& handler) {
             // for each entity container
             for_each([handler = std::forward<handler_t>(handler), this](auto&& entities) {

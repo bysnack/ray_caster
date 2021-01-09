@@ -13,8 +13,8 @@ namespace utils::coordinates {
 
 	world::operator tile() const noexcept {
 		return {
-			static_cast<int>(std::floorf(x)),
-			static_cast<int>(std::floorf(y))
+			static_cast<int>(floorf(x)),
+			static_cast<int>(floorf(y))
 		};
 	}
 }
