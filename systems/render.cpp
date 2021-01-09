@@ -34,13 +34,20 @@ namespace systems {
         _window->clear(sf::Color::Black);
         // apply only to renderizable entities
         _entities.apply_to<entities::renderizable>([&](auto&& entity) {
+            // render lights
+            if constexpr (entities::casteable<decltype(entity)>::value) {
+                const auto& [type, vertices, state] = entity.light.render;
+                _window->draw(vertices.data(), vertices.size(), type, state);
+            }
+
             // render player
             if constexpr (entities::is_entity_v<decltype(entity), entities::player>) {
                 entity.render = calculate_player_render(entity);
             }
+
             const auto& [type, vertices, state] = entity.render;
             _window->draw(vertices.data(), vertices.size(), type, state);
-            });
+        });
 
         _window->display();
     }

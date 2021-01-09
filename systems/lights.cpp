@@ -152,22 +152,17 @@ namespace systems {
 	lights::lights(entities::entities& container) noexcept :
 		_entities{ container }
 	{
-		_entities.insert_or_replace(entities::light{}, 0);
-		_entities.apply_to<entities::casteable>([](auto&& entity) {
-			if (!entity.texture.loadFromFile("assets/light.png")) std::cout << "ERROR\n";
-		});
 	}
 
 	void lights::operator()() noexcept {
 		_entities.apply_to<entities::casteable>([&](auto&& entity) {
-			auto& [primitive, vertices, state] = entity.render;
-			//if (!vertices.empty() && vertices[0].position == entity.position) return;
+			auto& [primitive, vertices, state] = entity.light.render;
 			// add the rays
 			float angle = 2.f * M_PI;
 			float modifier = angle / rays_amount;
 
 			auto scale = [&](const utils::coordinates::screen& inter, const utils::coordinates::screen& pos, const utils::coordinates::screen& dim)->utils::coordinates::screen {
-				auto [sx, sy] = entity.texture.getSize();
+				auto [sx, sy] = entity.light.texture->getSize();
 				return {
 					(sx / dim.x) * (inter.x - pos.x + dim.x / 2.f),
 					(sy / dim.y) * (inter.y - pos.y + dim.y / 2.f)
@@ -176,10 +171,16 @@ namespace systems {
 
 			vertices.clear();
 			primitive = sf::TriangleFan;
-			state.texture = &entity.texture;
+
+			if (!entity.light.texture) {
+				entity.light.texture = std::make_unique<sf::Texture>();
+				if (entity.light.texture->loadFromFile("assets/light.png")) {
+					state.texture = entity.light.texture.get();
+				}
+			};
 
 			// first vertex in the center
-			vertices.emplace_back(static_cast<utils::coordinates::screen>(entity.position), scale(entity.position, entity.position, entity.dimensions));
+			vertices.emplace_back(static_cast<utils::coordinates::screen>(entity.position), scale(entity.position, entity.position, entity.light.dimensions));
 
 			// calculate the next rays
 			for (auto i = 0u; i < rays_amount; i++) {
@@ -189,11 +190,11 @@ namespace systems {
 					static_cast<utils::coordinates::screen>(interX) :
 					static_cast<utils::coordinates::screen>(interY);
 
-				vertices.emplace_back(inter, scale(inter, entity.position, entity.dimensions));
+				vertices.emplace_back(inter, scale(inter, entity.position, entity.light.dimensions));
 				angle += modifier;
 
 			}
-			vertices.emplace_back(vertices[1].position, scale(vertices[1].position, entity.position, entity.dimensions));
+			vertices.emplace_back(vertices[1].position, scale(vertices[1].position, entity.position, entity.light.dimensions));
 		});
 	}
 }

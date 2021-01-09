@@ -50,11 +50,9 @@ namespace systems {
         // only on movable entities
         _entities.apply_to<entities::movable>([&](auto&& elem) {
             // player
-            if constexpr (entities::is_entity_v<decltype(elem), entities::player>) {
-                auto [position, heading] = capture_movement(elem.speed, elem.heading);
-                elem.position += std::move(position);
-                elem.heading = heading;
-            }
+            auto [position, heading] = capture_movement(elem.speed, elem.heading);
+            elem.position += std::move(position);
+            elem.heading = heading;
         });
     }
 }

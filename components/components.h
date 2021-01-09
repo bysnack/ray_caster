@@ -8,3 +8,4 @@
 #include "heading.h"
 #include "intersection.h"
 #include "seed.h"
+#include "light.h"

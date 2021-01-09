@@ -10,5 +10,6 @@ namespace entities {
 		components::speed       speed     { 0.25f                       };
 		components::heading     heading   { components::heading::north  };
 		components::dimensions  dimensions{ 1.f, 1.f	                };
+		components::light		light	  {								};
 	};
 }
