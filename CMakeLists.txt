@@ -29,7 +29,6 @@ set(ENTITIES_HEADERS	entities/cell.h
 						entities/entities.h
 						entities/player.h
 						entities/traits.h
-						entities/light.h
 						entities/map.h
 						entities/ray.h)
 
@@ -59,6 +58,8 @@ set(SYSTEMS_SOURCE		systems/collision.cpp
 						systems/systems.cpp)
 
 add_executable(caster main.cpp ${SYSTEMS_HEADERS} ${COMPONENTS_HEADERS} ${ENTITIES_HEADERS} ${UTILITIES_HEADERS} ${SYSTEMS_SOURCE} ${UTILITIES_SOURCE})
+
+configure_file(${CMAKE_SOURCE_DIR}/assets/light.png ${CMAKE_BINARY_DIR}/assets/light.png COPYONLY)
 
 target_include_directories(caster PRIVATE ${GSL_INCLUDE_DIR})
 target_link_libraries(caster 	sfml-graphics 

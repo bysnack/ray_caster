@@ -42,17 +42,13 @@ namespace {
 
 namespace systems {
 
-    movement::movement(entities::entities& container) noexcept :
-        _entities{ container }
-    {}
-
-    void movement::operator()() noexcept {
+    void movement(entities::entities& container) noexcept {
         // only on movable entities
-        _entities.apply_to<entities::movable>([&](auto&& elem) {
+        container.apply_for<components::spatial, components::heading, components::speed>([&](auto&& elem) {
             // player
-            auto [position, heading] = capture_movement(elem.speed, elem.heading);
-            elem.position += std::move(position);
-            elem.heading = heading;
+            auto [position, heading] = capture_movement(std::get<components::speed>(elem), std::get<components::heading>(elem));
+            std::get<components::spatial>(elem).position += std::move(position);
+            std::get<components::heading>(elem) = heading;
         });
     }
 }

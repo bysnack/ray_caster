@@ -2,29 +2,26 @@
 
 #include <memory>
 
+#include "../entities/entities.h"
 #include "collision.h"
+#include "lights.h"
 #include "movement.h"
 #include "render.h"
-#include "../entities/entities.h"
-#include "lights.h"
-
 
 namespace systems {
 
-    class systems {
-    public:
-        using systems_t = std::tuple<render, movement, collision, lights>;
+class systems {
+public:
+  systems(entities::entities &container);
 
-        systems(std::shared_ptr<sf::RenderWindow> window);
+  void operator()(entities::entities &container) {
+    movement(container);
+    collision(container);
+    lights(container);
+  }
 
-        void run_all() {
-            std::apply([](auto&& ...system) {
-                (system(), ...);
-            }, _systems);
-        }
-
-    private:
-        entities::entities  _entities;
-        systems_t           _systems;
-    };
-}
+  void operator()(entities::entities &container, sf::RenderWindow &window) {
+    render(container, window);
+  }
+};
+} // namespace systems

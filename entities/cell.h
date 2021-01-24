@@ -7,10 +7,9 @@
 
 namespace entities {
 
-	struct cell {
-		components::render      render;
-		components::position    position;
-		components::dimensions  dimensions;
-	};
+	using cell = std::tuple<
+		components::render,
+		components::spatial
+	>;
 }
 

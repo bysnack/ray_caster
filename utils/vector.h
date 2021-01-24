@@ -17,6 +17,8 @@ namespace utils {
         using value_type = T;
         T x, y;
 
+        vector() = default;
+
         vector(T x , T y) noexcept : 
             x{ x },
             y{ y }

@@ -1,11 +1,13 @@
 #include <math.h>
 #include "render.h"
+#include "../entities/entities.h"
 
 namespace {
 
     components::render calculate_player_render(const entities::player& player)
     {
-        auto screen_dimentions = static_cast<utils::coordinates::screen>(player.dimensions);
+        const auto& [position, dimensions] = std::get<components::spatial>(player);
+        auto screen_dimentions = static_cast<utils::coordinates::screen>(dimensions);
         auto segments = static_cast<size_t>(screen_dimentions.x);
         auto radius = static_cast<size_t>(screen_dimentions.y / 2);
 
@@ -17,7 +19,7 @@ namespace {
               radius * cosf(theta),
               radius * sinf(theta)
             };
-            vertices.emplace_back(vertexPos + static_cast<utils::coordinates::screen>(player.position), sf::Color::Green);
+            vertices.emplace_back(vertexPos + static_cast<utils::coordinates::screen>(position), sf::Color::Green);
         }
         return { sf::TriangleFan, std::move(vertices), {} };
     }
@@ -25,30 +27,26 @@ namespace {
 
 namespace systems {
 
-    render::render(entities::entities& container, std::shared_ptr<sf::RenderWindow> window) :
-        _entities{ container },
-        _window{ std::move(window) }
-    {}
-
-    void render::operator()() noexcept {
-        _window->clear(sf::Color::Black);
+    void render(entities::entities& container, sf::RenderWindow& window) {
+        window.clear(sf::Color::Black);
         // apply only to renderizable entities
-        _entities.apply_to<entities::renderizable>([&](auto&& entity) {
+        container.apply_for<components::render>([&](auto&& entity) {
+            auto& render = std::get<components::render>(entity);
             // render lights
-            if constexpr (entities::casteable<decltype(entity)>::value) {
-                const auto& [type, vertices, state] = entity.light.render;
-                _window->draw(vertices.data(), vertices.size(), type, state);
+            if constexpr (entities::has_component<components::light, std::remove_reference_t<decltype(entity)>>::value) {
+                const auto& [type, vertices, state] = std::get<components::light>(entity).render;
+                window.draw(vertices.data(), vertices.size(), type, state);
             }
 
             // render player
             if constexpr (entities::is_entity_v<decltype(entity), entities::player>) {
-                entity.render = calculate_player_render(entity);
+                render = calculate_player_render(entity);
             }
 
-            const auto& [type, vertices, state] = entity.render;
-            _window->draw(vertices.data(), vertices.size(), type, state);
+            const auto& [type, vertices, state] = render;
+            window.draw(vertices.data(), vertices.size(), type, state);
         });
 
-        _window->display();
+        window.display();
     }
 }

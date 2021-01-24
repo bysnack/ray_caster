@@ -9,3 +9,5 @@
 #include "intersection.h"
 #include "seed.h"
 #include "light.h"
+#include "spatial.h"
+#include "collision.h"

@@ -8,11 +8,5 @@
 
 namespace systems {
 
-    class movement {
-    public:
-        movement(entities::entities& container) noexcept;
-        void operator()() noexcept;
-    private:
-        entities::entities& _entities;
-    };
+    void movement(entities::entities& container) noexcept;
 }

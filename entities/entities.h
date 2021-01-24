@@ -2,6 +2,7 @@
 
 #include "traits.h"
 #include <unordered_map>
+#include <variant>
 
 #include "player.h"
 #include "cell.h"
@@ -9,45 +10,54 @@
 #include "ray.h"
 
 namespace entities {
+    template<typename target_t, typename tuple_t>
+    struct has_component;
+
+    template<typename target_t, typename ...components_t>
+    struct has_component<target_t, std::tuple<components_t...>> : std::disjunction<std::is_same<target_t, components_t>...> {};
 
     class entities {
     public:
-        template<class entitiy_t>
-        using value_type    = std::unordered_map<uint64_t, std::remove_cv_t<std::remove_reference_t<entitiy_t>>>;
-        using container     = std::tuple<value_type<map>, value_type<ray>, value_type<cell>, value_type<player>>;
+        using container     = std::unordered_map<
+            uint32_t,
+            std::variant<player, map, cell>
+        >;
 
         template<class entitiy_t>
-        void insert_or_replace(entitiy_t&& entity, uint64_t identifier) {
-            std::get<value_type<entitiy_t>>(_entities)[identifier] = std::move(entity);
+        void insert_or_replace(entitiy_t&& entity) {
+            _entities[_entities.size()] = std::move(entity);
         }
 
-        template<template<class ...> class trait_t, class handler_t>
-        void apply_to(handler_t&& handler) {
-            // for each entity container
-            for_each([handler = std::forward<handler_t>(handler), this](auto&& entities) {
-                // get the mapped type
-                using mapped_type = typename std::remove_reference_t<decltype(entities)>::mapped_type;
-                // only run if needed
-                if constexpr (trait_t<mapped_type>::value) {
-                    // loop through all the elements of the tuple element
-                    for (auto&& entity : entities) {
-                        handler(entity.second);
+        template<class ...component_t, typename handler_t>
+        void apply_for(handler_t handler) {
+            // for each variant of entities
+            for (auto& [id, entity] : _entities) {
+                // visit it and apply the handler
+                std::visit([handler = std::move(handler)](auto& element){
+                    // first retrieve the entity type so we can verify that the handler
+                    // needs to be applied to this entity
+                    using entity_t = std::remove_reference_t<decltype(element)>;
+                    if constexpr ((has_component<component_t, entity_t>::value && ... && true)) {
+                        // components are part of the entity, apply handler
+                        handler(element);
                     }
-                }
-            });
+                }, entity);
+            }
         }
 
-        template<class handler_t>
-        void for_each(handler_t&& handler) {
-            // apply handler to each entity in the tuple
-            std::apply([handler = std::forward<handler_t>(handler), this](auto&& ...entity) {
-                (handler(entity), ...);
-            }, _entities);
-        }
+        template<class entity_t>
+        std::vector<entity_t> get() {
+            std::vector<entity_t> retval;
 
-        template<class entitiy_t>
-        decltype(auto) get() {
-            return std::get<value_type<entitiy_t>>(_entities);
+            for (auto& [id, entity_variant] : _entities) {
+                std::visit([&retval](auto& entity) {
+                    if constexpr (std::is_same_v<std::remove_reference_t<decltype(entity)>, entity_t>) {
+                        retval.push_back(entity);
+                    }
+                }, entity_variant);
+            }
+
+            return retval;
         }
 
     private:
