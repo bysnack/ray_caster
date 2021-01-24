@@ -3,8 +3,9 @@
 #include "../entities/entities.h"
 #include "../utils/coordinates/coordinates.h"
 #include "../utils/utilities.h"
-
 #include <math.h>
+#include <mutex>
+#include <thread>
 
 namespace {
 
@@ -144,7 +145,7 @@ calculate_intersections(const utils::coordinates::world &position, float angle,
 } // namespace
 
 namespace systems {
-constexpr size_t rays_amount = 300;
+constexpr size_t rays_amount = 500;
 
 void lights(entities::entities &container) noexcept {
   container.apply_for<components::light>([&](auto &&entity) {
@@ -165,6 +166,7 @@ void lights(entities::entities &container) noexcept {
     };
 
     vertices.clear();
+    vertices.reserve(rays_amount);
     primitive = sf::TriangleFan;
 
     if (!light.texture) {
@@ -178,19 +180,44 @@ void lights(entities::entities &container) noexcept {
     vertices.emplace_back(static_cast<utils::coordinates::screen>(position),
                           scale(position, position, light.dimensions));
 
-    // calculate the next rays
-    for (auto i = 0u; i < rays_amount; i++) {
-      // calculate intersections
-      auto [interX, interY] =
-          calculate_intersections(position, angle, light.dimensions.x / 2,
-                                  container.get<entities::map>());
-      auto inter = utils::is_closer(position, interX, interY)
-                       ? static_cast<utils::coordinates::screen>(interX)
-                       : static_cast<utils::coordinates::screen>(interY);
+    size_t num_threads = std::thread::hardware_concurrency() == 0
+                             ? 1
+                             : std::thread::hardware_concurrency();
+    std::vector<std::thread> pool(num_threads);
+    std::vector<std::vector<sf::Vertex>> results(num_threads);
+    std::mutex mutex;
 
-      vertices.emplace_back(inter, scale(inter, position, light.dimensions));
-      angle += modifier;
+    auto rays_per_thread = rays_amount / num_threads;
+    for (auto i = 0; i < num_threads; ++i) {
+      pool[i] = std::thread{[&, index = i] {
+        auto initial_angle = angle + index * (angle / num_threads);
+        auto &[p, d] = std::get<components::spatial>(entity);
+        std::vector<sf::Vertex> res;
+        res.reserve(rays_per_thread);
+
+        for (auto j = 0; j < rays_per_thread; ++j) {
+          // calculate intersections
+          auto [interX, interY] =
+              calculate_intersections(p, initial_angle, light.dimensions.x / 2,
+                                      container.get<entities::map>());
+          auto inter = utils::is_closer(p, interX, interY)
+                           ? static_cast<utils::coordinates::screen>(interX)
+                           : static_cast<utils::coordinates::screen>(interY);
+
+          results[index].emplace_back(inter, scale(inter, p, light.dimensions));
+          initial_angle += modifier;
+        }
+      }};
     }
+
+    for (auto &thread : pool) {
+      thread.join();
+    }
+
+    for (auto &&res : results) {
+      std::move(res.begin(), res.end(), std::back_inserter(vertices));
+    }
+
     vertices.emplace_back(
         vertices[1].position,
         scale(vertices[1].position, position, light.dimensions));

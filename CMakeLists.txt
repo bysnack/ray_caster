@@ -17,6 +17,7 @@ include_directories(${SFML_INCLUDE_DIR}
 					${CMAKE_SOURCE_DIR})
 
 find_package(SFML REQUIRED COMPONENTS graphics audio system window)
+find_package(Threads REQUIRED)
 
 set(SYSTEMS_HEADERS		systems/collision.h
 						systems/initialize_map.h
@@ -65,4 +66,5 @@ target_include_directories(caster PRIVATE ${GSL_INCLUDE_DIR})
 target_link_libraries(caster 	sfml-graphics 
 								sfml-audio 
 								sfml-system 
-								sfml-window)
+								sfml-window
+								Threads::Threads)
